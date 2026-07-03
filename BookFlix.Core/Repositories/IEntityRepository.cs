@@ -1,13 +1,8 @@
-﻿namespace BookFlix.Core.Repositories
+using BookFlix.Core.Abstractions;
+
+namespace BookFlix.Core.Repositories
 {
-    public interface IEntityRepository<T> where T : class
+    public interface IEntityRepository<T> : IReadRepository<T>, IWriteRepository<T> where T : class, IEntity
     {
-        Task<T> GetByIDAsync(Guid id);
-        Task<T> GetByIDForUpdateAsync(Guid id);
-        Task<bool> DeleteAsync(Guid id);
-        Task<IReadOnlyCollection<T>> GetAllAsync();
-        Task<bool> IsExistByIDAsync(Guid id);
-        Task<T> AddAsync(T entity);
-        Task SaveChangesAsync();
     }
 }
