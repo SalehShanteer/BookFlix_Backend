@@ -6,5 +6,6 @@ namespace BookFlix.Core.Repositories
     {
         Task<RefreshToken> AddAsync(RefreshToken entity);
         Task<RefreshToken> GetByTokenAsync(string token);
+        Task SaveChangesAsync();
     }
 }

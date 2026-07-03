@@ -12,8 +12,8 @@ namespace BookFlix.Core.Services
 {
     public class JwtService : IJwtService
     {
-        IConfiguration _configuration;
-        IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IConfiguration _configuration;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
         public JwtService(IConfiguration configuration, IRefreshTokenRepository refreshTokenRepository)
         {

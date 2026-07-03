@@ -5,12 +5,16 @@ import { IToken } from '../models/auth/token.model';
 import { Observable, of, tap } from 'rxjs';
 import { TokenHelper } from '../../shared/helpers/token-helper';
 import { ILogin } from '../models/auth/login.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private api: ApiService) {}
+  constructor(
+    private api: ApiService,
+    private router: Router,
+  ) {}
 
   isAuthenticated(): Observable<Boolean> {
     var accessToken = TokenHelper.getAccessToken();
@@ -26,7 +30,7 @@ export class AuthService {
       tap((res) => {
         TokenHelper.setAccessToken(res.accessToken);
         TokenHelper.setRefreshToken(res.refreshToken);
-      })
+      }),
     );
   }
 
@@ -35,7 +39,20 @@ export class AuthService {
       tap((res) => {
         TokenHelper.setAccessToken(res.accessToken);
         TokenHelper.setRefreshToken(res.refreshToken);
-      })
+      }),
     );
+  }
+
+  refreshSession() {
+    return this.api.post('/auth/refresh', {});
+  }
+
+  // should add this api in backend
+  logoutBackend() {
+    return this.api.post('/auth/logout', {});
+  }
+
+  forceLogout() {
+    this.router.navigate(['login']);
   }
 }

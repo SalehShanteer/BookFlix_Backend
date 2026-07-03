@@ -1,4 +1,6 @@
-﻿using BookFlix.Core.Service_Interfaces;
+﻿using Azure.Core;
+using BookFlix.Core.Helpers;
+using BookFlix.Core.Service_Interfaces;
 using BookFlix.Web.Dtos.Auth;
 using BookFlix.Web.Dtos.User;
 using BookFlix.Web.Mapper_Interfaces;
@@ -14,17 +16,19 @@ namespace BookFlix.Web.Controllers
         private readonly IUserService _userService;
         private readonly IUserMapper _userMapper;
         private readonly IJwtService _jwtService;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(IAuthService authService, IUserService userService, IUserMapper userMapper, IJwtService jwtService)
+        public AuthController(IAuthService authService, IUserService userService, IUserMapper userMapper, IJwtService jwtService, IConfiguration configuration)
         {
             _authService = authService;
             _userService = userService;
             _userMapper = userMapper;
             _jwtService = jwtService;
+            _configuration = configuration;
         }
 
         [HttpPost("signup")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> SignupAsync(UserCreateDto userCreateDto)
         {
@@ -32,22 +36,18 @@ namespace BookFlix.Web.Controllers
             var result = await _userService.AddUserAsUserAsync(user);
 
             if (result.IsFailure) return HandleFailure(result);
-
             string ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
             var authResult = await _authService.LoginAsync(userCreateDto.Email, userCreateDto.Password, ipAddress);
-
             if (authResult.IsFailure) return HandleFailure(authResult);
-                
-            return Ok(new TokensDto
-            {
-                AccessToken = authResult.Value.AccessToken,
-                RefreshToken = authResult.Value.RefreshToken
-            });
+
+            Response.SetTokenCookies(authResult.Value.AccessToken, authResult.Value.RefreshToken, _configuration);
+
+            return Ok();
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost("signup/admin")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> SignupAsAdminAsync(UserCreateDto userCreateDto)
         {
@@ -61,11 +61,9 @@ namespace BookFlix.Web.Controllers
 
             if (authResult.IsFailure) return HandleFailure(authResult);
 
-            return Ok(new TokensDto
-            {
-                AccessToken = authResult.Value.AccessToken,
-                RefreshToken = authResult.Value.RefreshToken
-            });
+            Response.SetTokenCookies(authResult.Value.AccessToken, authResult.Value.RefreshToken, _configuration);
+
+            return Ok();
         }
 
         [HttpPost("login")]
@@ -79,11 +77,9 @@ namespace BookFlix.Web.Controllers
 
             if (result.IsFailure) return HandleFailure(result);
 
-            return Ok(new TokensDto
-            {
-                AccessToken = result.Value.AccessToken,
-                RefreshToken = result.Value.RefreshToken
-            });
+            Response.SetTokenCookies(result.Value.AccessToken, result.Value.RefreshToken, _configuration);
+
+            return Ok();
         }
 
         [HttpPost("refresh")]
@@ -91,15 +87,23 @@ namespace BookFlix.Web.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> RefreshAsync([FromBody] RefreshTokenDto refreshToken)
         {
-            var result = await _userService.UpdateUserRefreshToken(refreshToken.Token);
+            var result = await _userService.UpdateUserRefreshTokenAsync(refreshToken.Token);
 
             if (result.IsFailure) return HandleFailure(result);
 
-            return Ok(new TokensDto
-            {
-                AccessToken = result.Value.AccessToken,
-                RefreshToken = result.Value.RefreshToken
-            });
+            Response.SetTokenCookies(result.Value.AccessToken, result.Value.RefreshToken, _configuration);
+
+            return Ok();
+        }
+
+        [HttpPost("Logout")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> LogoutAsync()
+        {
+            var refreshToken = Request.GetRefreshTokenFromCookies();
+            await _userService.RevokeUserRefreshTokenAsync(refreshToken);
+
+            return Ok();
         }
 
         [HttpPost("is-authenticated")]

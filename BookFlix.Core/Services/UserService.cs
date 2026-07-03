@@ -62,7 +62,7 @@ namespace BookFlix.Core.Services
             return Result.Success(user);
         } 
 
-        public async Task<User> GetUserByRefreshToken(string token)
+        public async Task<User> GetUserByRefreshTokenAsync(string token)
         {
             var refreshToken = await _refreshTokenRepository.GetByTokenAsync(token);
             if (refreshToken is null || !refreshToken.IsActive) return null;
@@ -138,9 +138,9 @@ namespace BookFlix.Core.Services
             return Result.Success(existingUser);
         }
 
-        public async Task<Result<(string AccessToken, string RefreshToken)>> UpdateUserRefreshToken(string refreshToken)
+        public async Task<Result<(string AccessToken, string RefreshToken)>> UpdateUserRefreshTokenAsync(string refreshToken)
         {
-            var user = await GetUserByRefreshToken(refreshToken);
+            var user = await GetUserByRefreshTokenAsync(refreshToken);
             if (user is null) return UnauthorizedRequest("InvalidRefreshToken");
 
             var storedToken = user.RefreshTokens.FirstOrDefault(rt => rt.Token == refreshToken);
@@ -159,10 +159,20 @@ namespace BookFlix.Core.Services
 
             return Result.Success((newAccessToken, newRefreshToken.Token));
         }
+        public async Task RevokeUserRefreshTokenAsync(string refreshToken)
+        {
+            var refreshTokenToRevoke = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
 
-        private async Task<bool> IsUsernameUsedBefore(string username) => await _userRepository.IsUsernameExistAsync(username);
+            if (refreshTokenToRevoke is null)
+            {
+                refreshTokenToRevoke.RevokedAt = DateTime.UtcNow;
+                await _refreshTokenRepository.SaveChangesAsync();
+            }
+        }
 
-        private async Task<bool> IsEmailUsedBefore(string email) => await _userRepository.IsEmailExistAsync(email);
+        private async Task<bool> IsUsernameUsedBeforeAsync(string username) => await _userRepository.IsUsernameExistAsync(username);
+
+        private async Task<bool> IsEmailUsedBeforeAsync(string email) => await _userRepository.IsEmailExistAsync(email);
 
         private async Task<Result> ValidateUsername(string username)
         {
@@ -178,7 +188,7 @@ namespace BookFlix.Core.Services
                 return Result.Failure(Error.Validation("UsernameLengthTooShort"));
             }
 
-            if (await IsUsernameUsedBefore(username))
+            if (await IsUsernameUsedBeforeAsync(username))
             {
                 _logger.LogWarning("Validation failed: The requested username '{Username}' is already taken.", username);
                 return Result.Failure(Error.Conflict("UsernameUsed"));
@@ -195,7 +205,7 @@ namespace BookFlix.Core.Services
                 return Result.Failure(Error.Validation("EmailEmpty"));
             }
 
-            if (await IsEmailUsedBefore(email))
+            if (await IsEmailUsedBeforeAsync(email))
             {
                 _logger.LogWarning("Validation failed: The provided email address '{Email}' is already registered.", email);
                 return Result.Failure(Error.Conflict("EmailUsed"));
