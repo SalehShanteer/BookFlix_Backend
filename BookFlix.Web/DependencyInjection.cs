@@ -1,4 +1,4 @@
-﻿using BookFlix.Web.Mapper_Interfaces;
+using BookFlix.Web.Mapper_Interfaces;
 using BookFlix.Web.Mappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -87,9 +87,10 @@ namespace BookFlix.Web
             {
                 options.AddPolicy("BookFlixApiCorsPolicy", policy =>
                 {
-                    policy.WithOrigins("https://localhost:7217", "http://localhost:5215", "http://localhost:4200")
+                    policy.WithOrigins("https://localhost:7217", "https://localhost/BookFlexWebApi", "http://localhost:5215", "http://localhost:4200")
                           .AllowAnyMethod()
-                          .AllowAnyHeader();
+                          .AllowAnyHeader()
+                          .AllowCredentials();
                 });
             });
 

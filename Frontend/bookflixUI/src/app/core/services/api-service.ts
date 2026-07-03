@@ -6,7 +6,7 @@ import { catchError, Observable, throwError } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'https://localhost:7201/api';
+  private baseUrl = 'https://localhost/BookFlexWebApi/api';
 
   constructor(private http: HttpClient) {}
 

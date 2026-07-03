@@ -47,7 +47,6 @@ export class AuthService {
     return this.api.post('/auth/refresh', {});
   }
 
-  // should add this api in backend
   logoutBackend() {
     return this.api.post('/auth/logout', {});
   }
