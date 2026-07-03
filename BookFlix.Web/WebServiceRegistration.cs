@@ -7,7 +7,7 @@ using System.Text;
 
 namespace BookFlix.Web
 {
-    public static class DependencyInjection
+    public static class WebServiceRegistration
     {
         private static byte[] GetJwtKey(IConfiguration configuration)
         {

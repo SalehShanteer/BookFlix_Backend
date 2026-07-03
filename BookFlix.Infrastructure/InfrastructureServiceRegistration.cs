@@ -1,4 +1,4 @@
-﻿using BookFlix.Core.Repositories;
+using BookFlix.Core.Repositories;
 using BookFlix.Infrastructure.Data;
 using BookFlix.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BookFlix.Infrastructure
 {
-    public static class DependencyInjection
+    public static class InfrastructureServiceRegistration
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {

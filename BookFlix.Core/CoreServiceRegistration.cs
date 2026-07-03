@@ -1,10 +1,10 @@
-﻿using BookFlix.Core.Service_Interfaces;
+using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BookFlix.Core
 {
-    public static class DependencyInjection
+    public static class CoreServiceRegistration
     {
         public static IServiceCollection AddCore(this IServiceCollection services)
         {
