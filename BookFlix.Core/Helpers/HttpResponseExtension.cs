@@ -15,16 +15,12 @@ namespace BookFlix.Core.Helpers
             double accessExpiryMinutes = double.TryParse(jwtSettings["ExpireMinutes"], out var accMin) ? accMin : 30;
             double refreshExpiryDays = double.TryParse(jwtSettings["RefreshTokenExpireDays"], out var refDays) ? refDays : 7;
 
-            var pathBase = response.HttpContext.Request.PathBase.Value;
-            var appPath = string.IsNullOrEmpty(pathBase) ? "/" : pathBase;
-            var authPath = (string.IsNullOrEmpty(pathBase) ? "" : pathBase) + "/api/auth";
-
             var accessTokenOptions = new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Path = appPath,
+                Path = "/",
                 Expires = DateTimeOffset.UtcNow.AddMinutes(accessExpiryMinutes)
             };
 
@@ -33,7 +29,7 @@ namespace BookFlix.Core.Helpers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Path = authPath,
+                Path = "/",
                 Expires = DateTimeOffset.UtcNow.AddDays(refreshExpiryDays)
             };
 
@@ -43,16 +39,12 @@ namespace BookFlix.Core.Helpers
 
         public static void DeleteTokenCookies(this HttpResponse response)
         {
-            var pathBase = response.HttpContext.Request.PathBase.Value;
-            var appPath = string.IsNullOrEmpty(pathBase) ? "/" : pathBase;
-            var authPath = (string.IsNullOrEmpty(pathBase) ? "" : pathBase) + "/api/auth";
-
             var accessTokenOptions = new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Path = appPath
+                Path = "/"
             };
 
             var refreshTokenOptions = new CookieOptions
@@ -60,7 +52,7 @@ namespace BookFlix.Core.Helpers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Path = authPath
+                Path = "/"
             };
             response.Cookies.Delete(accessTokenCookieName, accessTokenOptions);
             response.Cookies.Delete(refreshTokenCookieName, refreshTokenOptions);
