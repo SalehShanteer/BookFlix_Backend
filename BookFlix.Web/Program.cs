@@ -27,10 +27,8 @@ app.UseExceptionHandler(appBuilder =>
     });
 });
 
-// Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "BookFlix API V1"));
-
 
 //app.UseStaticFiles(new StaticFileOptions
 //{
@@ -39,11 +37,9 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "BookFlix API V1"));
 //});
 
 app.UseCors("BookFlixApiCorsPolicy");
-
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

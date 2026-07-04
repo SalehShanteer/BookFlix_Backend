@@ -1,27 +1,18 @@
-﻿using BookFlix.Core.Models;
+using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookFlix.Infrastructure.Repositories
 {
-    public class BookRepository : TransactionRepository, IBookRepository
+    public class BookRepository : EntityRepository<Book>, IBookRepository
     {
-        private readonly AppDbContext _context;
-
         public BookRepository(AppDbContext context) : base(context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Book> AddAsync(Book entity)
-        {
-            await _context.Books.AddAsync(entity);
-            return entity;
-        }
-
-        public async Task<IReadOnlyCollection<Book>> GetAllAsync()
-        => await _context.Books
+        public override async Task<IReadOnlyCollection<Book>> GetAllAsync()
+        => await Context.Books
                 .AsSplitQuery()
                 .Include(b => b.Authors)
                 .Include(b => b.Genres)
@@ -29,21 +20,21 @@ namespace BookFlix.Infrastructure.Repositories
                 .ToListAsync();
 
         public async Task<IReadOnlyCollection<Book>> GetByAuthorIDAsync(Guid authorID)
-        => await _context.Books
+        => await Context.Books
                 .AsNoTracking()
                 .Where(b => b.Authors.Any(a => a.ID == authorID))
                 .ToListAsync();
 
-        public async Task<Book> GetByIDAsync(Guid id)
-        => await _context.Books
+        public override async Task<Book> GetByIDAsync(Guid id)
+        => await Context.Books
                 .AsSplitQuery()
                 .AsNoTracking()
                 .Include(b => b.Authors)
                 .Include(b => b.Genres)
                 .FirstOrDefaultAsync(b => b.ID == id);
 
-        public async Task<Book> GetByIDForUpdateAsync(Guid id)
-             => await _context.Books
+        public override async Task<Book> GetByIDForUpdateAsync(Guid id)
+             => await Context.Books
                 .AsSplitQuery()
                 .Include(b => b.Authors)
                 .Include(b => b.Genres)
@@ -51,7 +42,7 @@ namespace BookFlix.Infrastructure.Repositories
 
         public async Task<bool> UpdateFileLocationAsync(Guid id, string fileLocation)
         {
-            var book = await _context.Books.FindAsync(id);
+            var book = await Context.Books.FindAsync(id);
             if (book is null) return false;
 
             book.FileLocation = fileLocation;
@@ -59,29 +50,25 @@ namespace BookFlix.Infrastructure.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public override async Task<bool> DeleteAsync(Guid id)
         {
-            var book = await _context.Books.FindAsync(id);
+            var book = await Context.Books.FindAsync(id);
             if (book is null) return false;
 
-            _context.Books.Remove(book);
+            Context.Books.Remove(book);
             return true;
         }
 
         public async Task<Book> GetByISBNAsync(string isbn)
-        => await _context.Books
+        => await Context.Books
                 .AsSplitQuery()
                 .AsNoTracking()
                 .Include(b => b.Authors)
                 .Include(b => b.Genres)
                 .FirstOrDefaultAsync(b => b.ISBN == isbn);
 
-        public async Task<bool> IsExistByIsbnAsync(string isbn) => await _context.Books.AsNoTracking().AnyAsync(b => b.ISBN == isbn);
+        public async Task<bool> IsExistByIsbnAsync(string isbn) => await Context.Books.AsNoTracking().AnyAsync(b => b.ISBN == isbn);
 
-        public async Task<bool> IsExistByIsbnAsync(Guid id, string isbn) => await _context.Books.AsNoTracking().AnyAsync(b => b.ISBN == isbn && b.ID != id);
-
-        public async Task<bool> IsExistByIDAsync(Guid id) => await _context.Books.AsNoTracking().AnyAsync(b => b.ID == id);
-
-        public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+        public async Task<bool> IsExistByIsbnAsync(Guid id, string isbn) => await Context.Books.AsNoTracking().AnyAsync(b => b.ISBN == isbn && b.ID != id);
     }
 }

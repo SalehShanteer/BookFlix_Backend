@@ -1,4 +1,4 @@
-﻿using BookFlix.Core.Helpers;
+using BookFlix.Core.Helpers;
 using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
@@ -41,14 +41,24 @@ namespace BookFlix.Core.Services
 
         public async Task<Result<User>> AddUserAsUserAsync(User user)
         {
-            var userRole = await _roleRepository.GetByIDAsync(Guid.Parse("2abd05f3-fc73-4a5f-a3b5-01291030851f"));
+            var userRole = await _roleRepository.GetByNameAsync("User");
+            if (userRole is null)
+            {
+                _logger.LogError("Failed to add user: 'User' role not found in database.");
+                return Result.Failure<User>(Error.NotFound("UserRoleNotFound"));
+            }
             user.Roles.Add(userRole);
             return await AddUserAsync(user);
         }
 
         public async Task<Result<User>> AddUserAsAdminAsync(User user)
         {
-            var adminRole = await _roleRepository.GetByIDAsync(Guid.Parse("32684285-5ff9-486d-a2a4-de00bdea2d20"));
+            var adminRole = await _roleRepository.GetByNameAsync("Admin");
+            if (adminRole is null)
+            {
+                _logger.LogError("Failed to add admin: 'Admin' role not found in database.");
+                return Result.Failure<User>(Error.NotFound("AdminRoleNotFound"));
+            }
             user.Roles.Add(adminRole);
             return await AddUserAsync(user);
         }

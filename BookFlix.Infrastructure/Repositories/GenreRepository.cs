@@ -1,21 +1,22 @@
-﻿using BookFlix.Core.Models;
+using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookFlix.Infrastructure.Repositories
 {
     public class GenreRepository : IGenreRepository
     {
-        AppDbContext _context;
+        private readonly AppDbContext _context;
 
         public GenreRepository(AppDbContext context)
         {
             _context = context;
         }
 
-        public Task<IReadOnlyCollection<Genre>> GetAllAsync()
+        public async Task<IReadOnlyCollection<Genre>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Genres.AsNoTracking().ToListAsync();
         }
 
         public async Task<Genre> GetByIDAsync(int id)
