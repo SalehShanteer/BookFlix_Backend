@@ -1,4 +1,4 @@
-﻿using Azure.Core;
+using Azure.Core;
 using BookFlix.Core.Helpers;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Web.Dtos.Auth;
@@ -102,6 +102,7 @@ namespace BookFlix.Web.Controllers
         {
             var refreshToken = Request.GetRefreshTokenFromCookies();
             await _userService.RevokeUserRefreshTokenAsync(refreshToken);
+            Response.DeleteTokenCookies();
 
             return Ok();
         }
