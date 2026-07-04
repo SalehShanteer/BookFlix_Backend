@@ -161,6 +161,8 @@ namespace BookFlix.Core.Services
         }
         public async Task RevokeUserRefreshTokenAsync(string refreshToken)
         {
+            if (string.IsNullOrEmpty(refreshToken)) return;
+
             var refreshTokenToRevoke = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
 
             if (refreshTokenToRevoke is not null)
