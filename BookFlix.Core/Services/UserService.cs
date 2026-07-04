@@ -163,7 +163,7 @@ namespace BookFlix.Core.Services
         {
             var refreshTokenToRevoke = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
 
-            if (refreshTokenToRevoke is null)
+            if (refreshTokenToRevoke is not null)
             {
                 refreshTokenToRevoke.RevokedAt = DateTime.UtcNow;
                 await _refreshTokenRepository.SaveChangesAsync();

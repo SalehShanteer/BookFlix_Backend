@@ -25,8 +25,8 @@ export class Login {
   onLogin() {
     const loginRequest: ILogin = this.loginForm.value;
     this.authService.login(loginRequest).subscribe({
-      next: (res) => {
-        console.log('Login successful:', res);
+      next: () => {
+        console.log('Login successful');
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {

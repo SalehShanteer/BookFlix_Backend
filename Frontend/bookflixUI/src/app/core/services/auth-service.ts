@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api-service';
 import { ISignup } from '../models/auth/signup.model';
-import { IToken } from '../models/auth/token.model';
 import { Observable, of, tap } from 'rxjs';
-import { TokenHelper } from '../../shared/helpers/token-helper';
 import { ILogin } from '../models/auth/login.model';
 import { Router } from '@angular/router';
 
@@ -16,29 +14,33 @@ export class AuthService {
     private router: Router,
   ) {}
 
-  isAuthenticated(): Observable<Boolean> {
-    var accessToken = TokenHelper.getAccessToken();
-    var refreshToken = TokenHelper.getRefreshToken();
-    if (!accessToken || !refreshToken) {
-      return of(false);
-    }
-    return this.api.post<Boolean>('/auth/is-authenticated', { token: refreshToken });
-  }
+  private isAuthChecked: boolean = false;
+  private isAuthenticated: boolean = false;
 
-  login(loginModel: ILogin): Observable<IToken> {
-    return this.api.post<IToken>('/auth/login', loginModel).pipe(
-      tap((res) => {
-        TokenHelper.setAccessToken(res.accessToken);
-        TokenHelper.setRefreshToken(res.refreshToken);
+  checkAuthStatus(): Observable<boolean> {
+    if (this.isAuthChecked) return of(this.isAuthenticated);
+    return this.api.post<boolean>('/auth/is-authenticated', {}).pipe(
+      tap((isAuthenticatedFromServer) => {
+        this.isAuthChecked = true;
+        this.isAuthenticated = isAuthenticatedFromServer;
       }),
     );
   }
 
-  signup(signupModel: ISignup): Observable<IToken> {
-    return this.api.post<IToken>('/auth/signup', signupModel).pipe(
-      tap((res) => {
-        TokenHelper.setAccessToken(res.accessToken);
-        TokenHelper.setRefreshToken(res.refreshToken);
+  login(loginModel: ILogin) {
+    return this.api.post('/auth/login', loginModel).pipe(
+      tap(() => {
+        this.isAuthChecked = true;
+        this.isAuthenticated = true;
+      }),
+    );
+  }
+
+  signup(signupModel: ISignup) {
+    return this.api.post('/auth/signup', signupModel).pipe(
+      tap(() => {
+        this.isAuthChecked = true;
+        this.isAuthenticated = true;
       }),
     );
   }
@@ -48,10 +50,17 @@ export class AuthService {
   }
 
   logoutBackend() {
-    return this.api.post('/auth/logout', {});
+    return this.api.post('/auth/logout', {}).pipe(
+      tap(() => {
+        this.isAuthChecked = true;
+        this.isAuthenticated = false;
+      }),
+    );
   }
 
   forceLogout() {
+    this.isAuthChecked = true;
+    this.isAuthenticated = false;
     this.router.navigate(['login']);
   }
 }

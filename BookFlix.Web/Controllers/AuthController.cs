@@ -108,9 +108,11 @@ namespace BookFlix.Web.Controllers
 
         [HttpPost("is-authenticated")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> IsAuthenticatedAsync([FromBody] RefreshTokenDto refreshToken)
+        public async Task<IActionResult> IsAuthenticatedAsync()
         {
-            var isAuthenticated = await _jwtService.IsValidRefreshToken(refreshToken.Token);
+            var refreshToken = Request.GetRefreshTokenFromCookies();
+
+            var isAuthenticated = await _jwtService.IsValidRefreshToken(refreshToken);
 
             return Ok(isAuthenticated);
         }

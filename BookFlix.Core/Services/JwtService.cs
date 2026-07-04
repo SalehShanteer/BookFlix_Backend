@@ -86,6 +86,7 @@ namespace BookFlix.Core.Services
 
         public async Task<bool> IsValidRefreshToken(string token)
         {
+            if (string.IsNullOrEmpty(token)) return false;
             var refreshToken = await _refreshTokenRepository.GetByTokenAsync(token);
 
             return refreshToken is not null && refreshToken.IsActive;
