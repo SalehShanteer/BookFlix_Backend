@@ -11,7 +11,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: ["./efbundle", "--connection", "Server=db;Database=BookFlix;User Id=sa;Password=BookFlixDBPassword123!;TrustServerCertificate=True;"]
+    entrypoint: [ "./efbundle", "--connection", "Server=db;Database=BookFlix;User Id=sa;Password=BookFlixDBPassword123!;TrustServerCertificate=True;" ]
     depends_on:
       db:
         condition: service_started
@@ -20,6 +20,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - BUILD_CONFIGURATION=Debug
     ports:
       - "8080:8080"
     environment:

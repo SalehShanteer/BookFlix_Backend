@@ -78,7 +78,7 @@ namespace BookFlix.Web.Controllers
 
             Response.SetTokenCookies(result.Value.AccessToken, result.Value.RefreshToken, _configuration);
 
-            return Ok();
+            return Ok(new { token = result.Value.AccessToken });
         }
 
         [HttpPost("refresh")]
