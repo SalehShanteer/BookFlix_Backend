@@ -1,4 +1,3 @@
-using Azure.Core;
 using BookFlix.Core.Helpers;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Web.Dtos.Auth;
