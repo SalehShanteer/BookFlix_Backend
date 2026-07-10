@@ -1,13 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.4.11626.88 stable
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
-	EndProjectSection
-EndProject
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookFlix.Core", "BookFlix.Core\BookFlix.Core.csproj", "{8E4CF944-BE93-43FD-BE1C-1557CD7B4A53}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookFlix.Infrastructure", "BookFlix.Infrastructure\BookFlix.Infrastructure.csproj", "{DEAD61E2-59C8-4724-833B-8AF9D61263B2}"
@@ -36,11 +32,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{8E4CF944-BE93-43FD-BE1C-1557CD7B4A53} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{DEAD61E2-59C8-4724-833B-8AF9D61263B2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{485E282B-BDF6-4CC8-BA84-6372DCF26C2A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-	EndGlobalSection
+
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {009654C8-4BE3-4FB0-9F75-6AC0AE367DB4}
 	EndGlobalSection
