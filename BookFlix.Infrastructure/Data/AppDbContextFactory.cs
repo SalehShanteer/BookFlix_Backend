@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
@@ -10,9 +10,13 @@ namespace BookFlix.Infrastructure.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-            var apiProjectPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../BookFlix.Web"));
+            var basePath = Directory.GetCurrentDirectory();
+            if (!File.Exists(Path.Combine(basePath, "appsettings.json")))
+            {
+                basePath = Path.GetFullPath(Path.Combine(basePath, "../BookFlix.Web"));
+            }
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(apiProjectPath)
+                .SetBasePath(basePath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
