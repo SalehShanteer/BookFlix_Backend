@@ -12,6 +12,7 @@ namespace BookFlix.Core
             services.AddHttpContextAccessor();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IFileService<Book>, BookFileService>();
+            services.AddScoped<IFileService<User>, UserFileService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserLogService, UserLogService>();

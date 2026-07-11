@@ -1,4 +1,4 @@
-﻿using BookFlix.Core.Models;
+using BookFlix.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -29,6 +29,10 @@ namespace BookFlix.Infrastructure.Data.Config
                 .HasDefaultValueSql("SYSUTCDATETIME()");
             builder.Property(u => u.UpdatedAt)
                 .IsRequired(false);
+
+            builder.Property(u => u.FileLocation)
+                .IsRequired(false)
+                .HasMaxLength(50);
 
             // Relationships
             builder.HasMany(u => u.Roles)
