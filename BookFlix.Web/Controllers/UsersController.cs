@@ -1,8 +1,11 @@
-﻿using BookFlix.Core.Service_Interfaces;
+using BookFlix.Core.Service_Interfaces;
+using BookFlix.Core.Services;
+using BookFlix.Core.Services.Validation;
 using BookFlix.Web.Dtos.User;
 using BookFlix.Web.Mapper_Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace BookFlix.Web.Controllers
 {
@@ -62,6 +65,36 @@ namespace BookFlix.Web.Controllers
             if (result.IsFailure) return HandleFailure(result);
             var userDto = _userMapper.ToUserDto(result.Value);
             return Ok(userDto);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{id}/ProfileImage")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUserProfileImageAsync(Guid id)
+        {
+            var fileResult = await _userService.GetUserProfilePathAsync(id);
+            if (fileResult.IsFailure) return HandleFailure(fileResult);
+           
+            var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(fileResult.Value, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            return PhysicalFile(fileResult.Value, contentType);
+        }
+
+        [HttpPut("{id}/ProfileImage")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UploadProfileImageAsync(Guid id, IFormFile file)
+        {
+            var result = await _userService.UploadProfileImageAsync(id, file);
+
+            if (result.IsFailure) return HandleFailure(result);
+
+            return Ok(new { FileID = result.Value });
         }
     }
 }

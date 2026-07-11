@@ -4,6 +4,7 @@ using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace BookFlix.Core.Services
 {
@@ -15,8 +16,9 @@ namespace BookFlix.Core.Services
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IJwtService _jwtService;
         private readonly ICurrentUserContext _currentUserContext;
+        private readonly IFileService<User> _fileService;
 
-        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IRefreshTokenRepository refreshTokenRepository, IJwtService jwtService, ILogger<UserService> logger, ICurrentUserContext currentUserContext)
+        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IRefreshTokenRepository refreshTokenRepository, IJwtService jwtService, ILogger<UserService> logger, ICurrentUserContext currentUserContext, IFileService<User> fileService)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
@@ -24,6 +26,27 @@ namespace BookFlix.Core.Services
             _jwtService = jwtService;
             _logger = logger;
             _currentUserContext = currentUserContext;
+            _fileService = fileService;
+        }
+
+        public async Task<Result<string>> GetUserProfilePathAsync(Guid userID)
+        {
+            var userResult = await GetUserByIDAsync(userID);
+            if (userResult.IsFailure) return Result.Failure<string>(userResult.Error);
+
+            var fileID = userResult.Value.FileID;
+            if (!fileID.HasValue) return Result.Failure<string>(Error.NotFound("UserProfileImageNotFound"));
+
+            var fileResult = await _fileService.GetFilePathAsync(fileID.Value);
+
+            if (fileResult.IsFailure) return Result.Failure<string>(fileResult.Error);
+
+            return Result.Success(fileResult.Value);
+        }
+
+        public async Task<Result<Guid>> UploadProfileImageAsync(Guid userID, IFormFile file)
+        {
+            return await _fileService.UploadFileAsync(userID, file);
         }
 
         private async Task<Result<User>> AddUserAsync(User user)
