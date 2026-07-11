@@ -205,6 +205,8 @@ namespace BookFlix.Core.Services
             }
         }
 
+        public Guid GetCurrentUserID() => _currentUserContext.UserID;
+     
         private async Task<bool> IsUsernameUsedBeforeAsync(string username) => await _userRepository.IsUsernameExistAsync(username);
 
         private async Task<bool> IsEmailUsedBeforeAsync(string email) => await _userRepository.IsEmailExistAsync(email);

@@ -93,5 +93,14 @@ namespace BookFlix.Web.Controllers
 
             return Ok(new { FileID = result.Value });
         }
+
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            var userId = _userService.GetCurrentUserID();
+            
+            return Ok(new { UserID = userId });
+        }
     }
 }

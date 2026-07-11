@@ -18,5 +18,6 @@ namespace BookFlix.Core.Service_Interfaces
         Task<IReadOnlyCollection<User>> GetAllUsersAsync();
         Task<Result<string>> GetUserProfilePathAsync(Guid userID);
         Task<Result<Guid>> UploadProfileImageAsync(Guid userID, IFormFile file);
+        Guid GetCurrentUserID();
     }
 }
