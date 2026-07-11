@@ -10,11 +10,13 @@ namespace BookFlix.Core.Services
     {
         private readonly IBookRepository _bookRepository;
         private readonly ILogger<BookService> _logger;
+        private readonly IFileService<Book> _fileService;
 
-        public BookService(IBookRepository bookRepository, ILogger<BookService> logger)
+        public BookService(IBookRepository bookRepository, ILogger<BookService> logger, IFileService<Book> fileService)
         {
             _bookRepository = bookRepository;
             _logger = logger;
+            _fileService = fileService;
         }
 
         public async Task<Result<Book>> AddBookAsync(Book book)
@@ -44,6 +46,20 @@ namespace BookFlix.Core.Services
             return Result.Success(existingBook);
         }
 
+        public async Task<Result<string>> GetBookFilePathAsync(Guid bookID)
+        {
+            var book = await GetBookByIDAsync(bookID);
+            if (book is null) return Result.Failure<string>(Error.NotFound("BookNotFound"));
+
+            var fileID = book.FileID;
+            if (!fileID.HasValue) return Result.Failure<string>(Error.NotFound("BookFileNotFound"));
+
+            var fileResult = await _fileService.GetFilePathAsync(fileID.Value);
+
+            if (fileResult.IsFailure) return Result.Failure<string>(fileResult.Error);
+
+            return Result.Success(fileResult.Value);
+        }
         public async Task<Result> DeleteBookAsync(Guid id)
         {
             using var transaction = await _bookRepository.BeginTransactionAsync();

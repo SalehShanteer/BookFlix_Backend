@@ -13,7 +13,6 @@ namespace BookFlix.Core.Service_Interfaces
         Task<Result<Book>> UpdateBookAsync(Book book);
         Task<Result> DeleteBookAsync(Guid id);
         Task<Book> GetBookByIsbnAsync(string isbn);
-        //Task<bool> IsBookExistAsync(int id);
-        //Task<bool> IsBookExistAsync(string isbn);
+        Task<Result<string>> GetBookFilePathAsync(Guid bookID);
     }
 }

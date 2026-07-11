@@ -1,11 +1,8 @@
 using BookFlix.Core.Service_Interfaces;
-using BookFlix.Core.Services;
-using BookFlix.Core.Services.Validation;
 using BookFlix.Web.Dtos.User;
 using BookFlix.Web.Mapper_Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 
 namespace BookFlix.Web.Controllers
 {
