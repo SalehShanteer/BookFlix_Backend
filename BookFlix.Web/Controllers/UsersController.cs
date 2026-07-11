@@ -19,58 +19,62 @@ namespace BookFlix.Web.Controllers
             _userService = userService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("profile")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetUserByIDAsync(Guid id)
+        public async Task<IActionResult> GetUserProfileAsync()
         {
-            var result = await _userService.GetUserByIDAsync(id);
+            var userId = _userService.GetCurrentUserID();
+            var result = await _userService.GetUserByIDAsync(userId);
             if (result.IsFailure) return HandleFailure(result);
             UserDto userDto = _userMapper.ToUserDto(result.Value);
             return Ok(userDto);
         }
 
-        [HttpPut("{id}/password")]
+        [HttpPut("password")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> UpdateUserPasswordAsync(Guid id, UserUpdatePasswordDto userUpdatePasswordDto)
+        public async Task<IActionResult> UpdateUserPasswordAsync(UserUpdatePasswordDto userUpdatePasswordDto)
         {
-            var result = await _userService.UpdateUserPasswordAsync(id, userUpdatePasswordDto.OldPassword, userUpdatePasswordDto.NewPassword);
+            var userId = _userService.GetCurrentUserID();
+            var result = await _userService.UpdateUserPasswordAsync(userId, userUpdatePasswordDto.OldPassword, userUpdatePasswordDto.NewPassword);
             if (result.IsFailure) return HandleFailure(result);
             return NoContent();
         }
 
-        [HttpPut("{id}/username")]
+        [HttpPut("username")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateUserUsernameAsync(Guid id, UserUpdateUsernameDto userUpdateUsernameDto)
+        public async Task<IActionResult> UpdateUserUsernameAsync(UserUpdateUsernameDto userUpdateUsernameDto)
         {
-            var result = await _userService.UpdateUserUsernameAsync(id, userUpdateUsernameDto.Username);
+            var userId = _userService.GetCurrentUserID();
+            var result = await _userService.UpdateUserUsernameAsync(userId, userUpdateUsernameDto.Username);
             if (result.IsFailure) return HandleFailure(result);
             var userDto = _userMapper.ToUserDto(result.Value);
             return Ok(userDto);
         }
 
-        [HttpPut("{id}/email")]
+        [HttpPut("email")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateUserEmailAsync(Guid id, UserUpdateEmailDto userUpdateEmailDto)
+        public async Task<IActionResult> UpdateUserEmailAsync(UserUpdateEmailDto userUpdateEmailDto)
         {
-            var result = await _userService.UpdateUserEmailAsync(id, userUpdateEmailDto.Email);
+            var userId = _userService.GetCurrentUserID();
+            var result = await _userService.UpdateUserEmailAsync(userId, userUpdateEmailDto.Email);
             if (result.IsFailure) return HandleFailure(result);
             var userDto = _userMapper.ToUserDto(result.Value);
             return Ok(userDto);
         }
 
-        [AllowAnonymous]
-        [HttpGet("{id}/ProfileImage")]
+        [HttpGet("ProfileImage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetUserProfileImageAsync(Guid id)
+        public async Task<IActionResult> GetUserProfileImageAsync()
         {
-            var fileResult = await _userService.GetUserProfilePathAsync(id);
+            var userId = _userService.GetCurrentUserID();
+            var fileResult = await _userService.GetUserProfilePathAsync(userId);
             if (fileResult.IsFailure) return HandleFailure(fileResult);
            
             var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
@@ -82,25 +86,17 @@ namespace BookFlix.Web.Controllers
             return PhysicalFile(fileResult.Value, contentType);
         }
 
-        [HttpPut("{id}/ProfileImage")]
+        [HttpPut("ProfileImage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UploadProfileImageAsync(Guid id, IFormFile file)
+        public async Task<IActionResult> UploadProfileImageAsync(IFormFile file)
         {
-            var result = await _userService.UploadProfileImageAsync(id, file);
+            var userId = _userService.GetCurrentUserID();
+            var result = await _userService.UploadProfileImageAsync(userId, file);
 
             if (result.IsFailure) return HandleFailure(result);
 
             return Ok(new { FileID = result.Value });
-        }
-
-        [Authorize]
-        [HttpGet("me")]
-        public IActionResult GetCurrentUser()
-        {
-            var userId = _userService.GetCurrentUserID();
-            
-            return Ok(new { UserID = userId });
         }
     }
 }
