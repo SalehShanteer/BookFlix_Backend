@@ -1,4 +1,4 @@
-﻿using BookFlix.Core.Models;
+using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Web.Dtos.Author;
 using BookFlix.Web.Dtos.Book;
@@ -34,6 +34,7 @@ namespace BookFlix.Web.Mappers
                 IsAvailable = book.IsAvailable,
                 CreatedAt = book.CreatedAt,
                 UpdatedAt = book.UpdatedAt,
+                FileID = book.FileID,
                 Authors = book.Authors?.Select(a => new AuthorDto
                 {
                     ID = a.ID,

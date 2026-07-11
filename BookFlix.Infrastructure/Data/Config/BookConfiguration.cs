@@ -1,4 +1,4 @@
-﻿using BookFlix.Core.Models;
+using BookFlix.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -39,9 +39,13 @@ namespace BookFlix.Infrastructure.Data.Config
             builder.Property(b => b.UpdatedAt)
                 .IsRequired(false);
 
-            builder.Property(b => b.FileLocation)
-                .IsRequired(false)
-                .HasMaxLength(50);
+            builder.Property(b => b.FileID)
+                .IsRequired(false);
+
+            builder.HasOne(b => b.File)
+                .WithMany()
+                .HasForeignKey(b => b.FileID)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Relationships
             builder.HasMany(b => b.Authors)

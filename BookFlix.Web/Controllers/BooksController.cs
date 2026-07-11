@@ -103,7 +103,29 @@ namespace BookFlix.Web.Controllers
 
             if (result.IsFailure) return HandleFailure(result);
 
-            return Ok(new FileUploadResultDto { FileUrl = result.Value });
+            return Ok(new FileUploadResultDto { FileID = result.Value });
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{id}/File")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetBookFileAsync(Guid id)
+        {
+            var book = await _bookService.GetBookByIDAsync(id);
+            if (book is null || !book.FileID.HasValue) 
+                return HandleFailure(Result.Failure(Error.NotFound("BookOrFileNotFound")));
+
+            var result = await _fileService.GetFilePathAsync(book.FileID.Value);
+            if (result.IsFailure) return HandleFailure(result);
+
+            var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(result.Value, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            return PhysicalFile(result.Value, contentType, Path.GetFileName(result.Value));
         }
     }
 }

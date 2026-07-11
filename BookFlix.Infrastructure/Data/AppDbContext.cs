@@ -1,4 +1,4 @@
-﻿using BookFlix.Core.Models;
+using BookFlix.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookFlix.Infrastructure.Data
@@ -16,6 +16,7 @@ namespace BookFlix.Infrastructure.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<UserLog> UserLogs { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<UploadedFile> UploadedFiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

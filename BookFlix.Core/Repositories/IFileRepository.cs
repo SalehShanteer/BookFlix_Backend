@@ -1,7 +1,7 @@
-﻿namespace BookFlix.Core.Repositories
+namespace BookFlix.Core.Repositories
 {
     public interface IFileRepository
     {
-        Task<bool> UpdateFileLocationAsync(Guid id, string fileLocation);
+        Task<bool> UpdateFileIDAsync(Guid id, Guid fileId);
     }
 }

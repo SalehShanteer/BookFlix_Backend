@@ -1,7 +1,7 @@
-﻿namespace BookFlix.Web.Dtos.Book
+namespace BookFlix.Web.Dtos.Book
 {
     public class FileUploadResultDto
     {
-        public string FileUrl { get; set; }
+        public Guid FileID { get; set; }
     }
 }

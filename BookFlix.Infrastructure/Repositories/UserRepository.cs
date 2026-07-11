@@ -11,12 +11,12 @@ namespace BookFlix.Infrastructure.Repositories
         {
         }
 
-        public async Task<bool> UpdateFileLocationAsync(Guid id, string fileLocation)
+        public async Task<bool> UpdateFileIDAsync(Guid id, Guid fileId)
         {
             var user = await Context.Users.FindAsync(id);
             if (user is null) return false;
 
-            user.FileLocation = fileLocation;
+            user.FileID = fileId;
             user.UpdatedAt = DateTime.UtcNow;
             return true;
         }

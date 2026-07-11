@@ -12,8 +12,11 @@ namespace BookFlix.Core.Services
     {
         public override string FolderName => "UserImages";
 
-        public UserFileService(IUserRepository userRepository, ILogger<UserFileService> logger)
-            : base(userRepository, logger)
+        public UserFileService(
+            IUserRepository userRepository, 
+            IUploadedFileRepository uploadedFileRepository, 
+            ILogger<UserFileService> logger)
+            : base(userRepository, uploadedFileRepository, logger)
         {
         }
 

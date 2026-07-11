@@ -1,4 +1,4 @@
-﻿using BookFlix.Web.Dtos.Author;
+using BookFlix.Web.Dtos.Author;
 using BookFlix.Web.Dtos.Genre;
 
 namespace BookFlix.Web.Dtos.Book
@@ -15,7 +15,7 @@ namespace BookFlix.Web.Dtos.Book
         public int? PageCount { get; set; }
         public decimal AverageRating { get; set; }
         public bool IsAvailable { get; set; } = true;
-        public string FileLocation { get; set; }
+        public Guid? FileID { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public List<AuthorDto> Authors { get; set; }

@@ -30,9 +30,13 @@ namespace BookFlix.Infrastructure.Data.Config
             builder.Property(u => u.UpdatedAt)
                 .IsRequired(false);
 
-            builder.Property(u => u.FileLocation)
-                .IsRequired(false)
-                .HasMaxLength(50);
+            builder.Property(u => u.FileID)
+                .IsRequired(false);
+
+            builder.HasOne(u => u.File)
+                .WithMany()
+                .HasForeignKey(u => u.FileID)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Relationships
             builder.HasMany(u => u.Roles)

@@ -40,12 +40,12 @@ namespace BookFlix.Infrastructure.Repositories
                 .Include(b => b.Genres)
                 .FirstOrDefaultAsync(b => b.ID == id);
 
-        public async Task<bool> UpdateFileLocationAsync(Guid id, string fileLocation)
+        public async Task<bool> UpdateFileIDAsync(Guid id, Guid fileId)
         {
             var book = await Context.Books.FindAsync(id);
             if (book is null) return false;
 
-            book.FileLocation = fileLocation;
+            book.FileID = fileId;
             book.UpdatedAt = DateTime.UtcNow;
             return true;
         }

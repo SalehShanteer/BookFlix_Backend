@@ -26,6 +26,7 @@ namespace BookFlix.Infrastructure
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserLogRepository, UserLogRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IUploadedFileRepository, UploadedFileRepository>();
 
             return services;
         }
