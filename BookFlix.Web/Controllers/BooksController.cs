@@ -1,5 +1,6 @@
-﻿using BookFlix.Core.Service_Interfaces;
+using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
+using BookFlix.Core.Models;
 using BookFlix.Web.Dtos.Book;
 using BookFlix.Web.Mapper_Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -12,10 +13,10 @@ namespace BookFlix.Web.Controllers
     public class BooksController : ApiController
     {
         private readonly IBookService _bookService;
-        private readonly IFileService _fileService;
+        private readonly IFileService<Book> _fileService;
         private readonly IBookMapper _bookMapper;
 
-        public BooksController(IBookService bookService, IFileService fileService, IBookMapper bookMapper)
+        public BooksController(IBookService bookService, IFileService<Book> fileService, IBookMapper bookMapper)
         {
             _bookService = bookService;
             _fileService = fileService;

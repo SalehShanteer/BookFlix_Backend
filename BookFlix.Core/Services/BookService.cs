@@ -1,4 +1,4 @@
-﻿using BookFlix.Core.Models;
+using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
@@ -9,13 +9,11 @@ namespace BookFlix.Core.Services
     public class BookService : IBookService
     {
         private readonly IBookRepository _bookRepository;
-        private readonly IFileService _fileService;
         private readonly ILogger<BookService> _logger;
 
-        public BookService(IBookRepository bookRepository, IFileService fileService, ILogger<BookService> logger)
+        public BookService(IBookRepository bookRepository, ILogger<BookService> logger)
         {
             _bookRepository = bookRepository;
-            _fileService = fileService;
             _logger = logger;
         }
 

@@ -2,7 +2,7 @@
 
 namespace BookFlix.Core.Repositories
 {
-    public interface IUserRepository : IEntityRepository<User>
+    public interface IUserRepository : IEntityfileRepository<User>
     {
         Task<User> GetByEmailAsync(string email);
         Task<User> GetByIDWithRelationsAsync(Guid id);

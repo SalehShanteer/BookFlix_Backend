@@ -11,6 +11,16 @@ namespace BookFlix.Infrastructure.Repositories
         {
         }
 
+        public async Task<bool> UpdateFileLocationAsync(Guid id, string fileLocation)
+        {
+            var user = await Context.Users.FindAsync(id);
+            if (user is null) return false;
+
+            user.FileLocation = fileLocation;
+            user.UpdatedAt = DateTime.UtcNow;
+            return true;
+        }
+
         public async Task<User> GetByEmailAsync(string email)
             => await Context.Users
                 .Include(u => u.Roles)

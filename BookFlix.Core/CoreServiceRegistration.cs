@@ -1,5 +1,6 @@
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services;
+using BookFlix.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BookFlix.Core
@@ -10,7 +11,7 @@ namespace BookFlix.Core
         {
             services.AddHttpContextAccessor();
             services.AddScoped<IBookService, BookService>();
-            services.AddScoped<IFileService, LocalFileService>();
+            services.AddScoped<IFileService<Book>, BookFileService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserLogService, UserLogService>();

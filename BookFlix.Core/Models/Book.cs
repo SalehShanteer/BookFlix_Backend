@@ -1,6 +1,6 @@
 ﻿namespace BookFlix.Core.Models
 {
-    public class Book : BaseEntity
+    public class Book : BaseEntityFile
     {
         public string Title { get; set; } = string.Empty;
 
@@ -23,8 +23,6 @@
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
-
-        public string FileLocation { get; set; }
 
         public ICollection<Author> Authors { get; set; } = new List<Author>();
         public ICollection<Genre> Genres { get; set; } = new List<Genre>();
