@@ -35,7 +35,4 @@
     <Folder Include="Files\Tables\" />
     <Folder Include="Scripts\" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="scaffold.ps1" />
-  </ItemGroup>
 </Project>
