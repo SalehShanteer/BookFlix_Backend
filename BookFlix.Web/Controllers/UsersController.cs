@@ -3,6 +3,7 @@ using BookFlix.Web.Dtos.User;
 using BookFlix.Web.Mapper_Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace BookFlix.Web.Controllers
 {
@@ -76,7 +77,6 @@ namespace BookFlix.Web.Controllers
             var userId = _userService.GetCurrentUserID();
             var fileResult = await _userService.GetUserProfilePathAsync(userId);
             if (fileResult.IsFailure) return HandleFailure(fileResult);
-           
             var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
             if (!provider.TryGetContentType(fileResult.Value, out var contentType))
             {

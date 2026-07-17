@@ -15,3 +15,8 @@ FileContentIndex
 
 # Environment files
 .env
+
+# SQL Server Database Project (SSDT)
+*.dbmdl
+*.jfm
+

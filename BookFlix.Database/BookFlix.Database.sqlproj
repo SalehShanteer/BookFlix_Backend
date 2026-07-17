@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build">
+  <Sdk Name="Microsoft.Build.Sql" Version="2.2.0" />
+  <PropertyGroup>
+    <Name>BookFlix.Database</Name>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    <ModelCollation>1033, CI</ModelCollation>
+    <EnableDefaultSqlItems>false</EnableDefaultSqlItems>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <ProjectGuid>{a80f9776-18b6-4900-9bc9-a8aaba54afa0}</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup>
+    <Build Include="Books\Tables\Authors.sql" />
+    <Build Include="Books\Tables\BookAuthors.sql" />
+    <Build Include="Books\Tables\BookGenres.sql" />
+    <Build Include="Books\Tables\Books.sql" />
+    <Build Include="Books\Tables\Genres.sql" />
+    <Build Include="Books\Tables\Reviews.sql" />
+    <Build Include="Users\Tables\RefreshTokens.sql" />
+    <Build Include="Users\Tables\Roles.sql" />
+    <Build Include="Users\Tables\UserLogs.sql" />
+    <Build Include="Users\Tables\UserRoles.sql" />
+    <Build Include="Users\Tables\Users.sql" />
+    <Build Include="Files\Tables\UploadedFiles.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\SeedData.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Books\" />
+    <Folder Include="Books\Tables\" />
+    <Folder Include="Users\" />
+    <Folder Include="Users\Tables\" />
+    <Folder Include="Files\" />
+    <Folder Include="Files\Tables\" />
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="scaffold.ps1" />
+  </ItemGroup>
+</Project>
