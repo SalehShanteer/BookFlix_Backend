@@ -8,3 +8,7 @@
 **/publish
 .dockerignore
 Dockerfile
+
+# Allow the database project dacpac to be copied in Docker builds
+!BookFlix.Database/bin
+!BookFlix.Database/bin/**

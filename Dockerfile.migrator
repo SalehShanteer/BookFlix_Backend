@@ -1,0 +1,4 @@
+FROM markhobson/sqlpackage:latest
+
+# Copy the compiled SSDT database project output into the container image
+COPY ./BookFlix.Database/bin/Debug/BookFlix.Database.dacpac /dacpac/BookFlix.Database.dacpac
