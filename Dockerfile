@@ -8,11 +8,6 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-
-# Install dotnet-ef tool globally in the build container
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="$PATH:/root/.dotnet/tools"
-
 # Copy csproj files and restore dependencies
 COPY ["BookFlix.Web/BookFlix.Web.csproj", "BookFlix.Web/"]
 COPY ["BookFlix.Core/BookFlix.Core.csproj", "BookFlix.Core/"]
@@ -28,11 +23,6 @@ RUN dotnet build "BookFlix.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "BookFlix.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-# Generate EF Core migration bundle
-WORKDIR /src
-RUN dotnet ef migrations bundle --project BookFlix.Infrastructure --startup-project BookFlix.Web -o /app/publish/efbundle --self-contained -r linux-x64
-
 # Final stage: copy published output and set entry point
 FROM base AS final
 WORKDIR /app
