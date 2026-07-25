@@ -100,6 +100,7 @@ namespace BookFlix.Web.Controllers
         }
 
         [HttpPost("Logout")]
+        [DisableRateLimiting]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> LogoutAsync()
         {
@@ -111,6 +112,7 @@ namespace BookFlix.Web.Controllers
         }
 
         [HttpPost("is-authenticated")]
+        [DisableRateLimiting]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> IsAuthenticatedAsync()
         {
