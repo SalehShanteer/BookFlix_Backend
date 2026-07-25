@@ -5,10 +5,12 @@ using BookFlix.Web.Dtos.User;
 using BookFlix.Web.Mapper_Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace BookFlix.Web.Controllers
 {
     [Route("api/auth")]
+    [EnableRateLimiting("AuthLimiter")]
     public class AuthController : ApiController
     {
         private readonly IAuthService _authService;

@@ -29,15 +29,10 @@ app.UseExceptionHandler(appBuilder =>
 
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "BookFlix API V1"));
-
-//app.UseStaticFiles(new StaticFileOptions
-//{
-//    FileProvider = new PhysicalFileProvider(bookDirectory),
-//    RequestPath = "/books"
-//});
-
+app.UseForwardedHeaders();
 app.UseCors("BookFlixApiCorsPolicy");
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
