@@ -4,6 +4,7 @@ using BookFlix.Core.Repositories;
 using BookFlix.Core.Services.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting;
 
 namespace BookFlix.Core.Service_Interfaces
 {
@@ -19,6 +20,7 @@ namespace BookFlix.Core.Service_Interfaces
         private readonly IEntityfileRepository<T> _repository;
         private readonly IUploadedFileRepository _uploadedFileRepository;
         private readonly ILogger<FileService<T>> _logger;
+        private readonly IWebHostEnvironment _environment;
         private string _directory;
 
         public abstract string FolderName { get; }
@@ -26,11 +28,13 @@ namespace BookFlix.Core.Service_Interfaces
         protected FileService(
             IEntityfileRepository<T> repository, 
             IUploadedFileRepository uploadedFileRepository, 
-            ILogger<FileService<T>> logger)
+            ILogger<FileService<T>> logger,
+            IWebHostEnvironment environment)
         {
             _repository = repository;
             _uploadedFileRepository = uploadedFileRepository;
             _logger = logger;
+            _environment = environment;
             SetDirectory();
         }
 
@@ -168,7 +172,7 @@ namespace BookFlix.Core.Service_Interfaces
 
         private void SetDirectory()
         {
-            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), FolderName);
+            string folderPath = Path.Combine(_environment.ContentRootPath, FolderName);
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
             _directory = folderPath;
         }

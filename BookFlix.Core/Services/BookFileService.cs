@@ -2,6 +2,7 @@ using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -14,8 +15,9 @@ namespace BookFlix.Core.Services
         public BookFileService(
             IBookRepository bookRepository, 
             IUploadedFileRepository uploadedFileRepository, 
-            ILogger<BookFileService> logger)
-            : base(bookRepository, uploadedFileRepository, logger)
+            ILogger<BookFileService> logger,
+            IWebHostEnvironment environment)
+            : base(bookRepository, uploadedFileRepository, logger, environment)
         {
         }
 
