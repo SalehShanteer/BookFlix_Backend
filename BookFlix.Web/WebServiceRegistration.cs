@@ -1,3 +1,4 @@
+using BookFlix.Core.Helpers;
 using BookFlix.Web.Mapper_Interfaces;
 using BookFlix.Web.Mappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -67,6 +68,18 @@ namespace BookFlix.Web
                     ValidIssuer = jwtSettings["Issuer"],
                     ValidAudience = jwtSettings["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(jwtKeyBytes)
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Cookies.TryGetValue(HttpResponseExtension.accessTokenCookieName, out var token))
+                        {
+                            context.Token = token;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
         }

@@ -86,9 +86,11 @@ namespace BookFlix.Web.Controllers
         [HttpPost("refresh")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> RefreshAsync([FromBody] RefreshTokenDto refreshToken)
+        public async Task<IActionResult> RefreshAsync()
         {
-            var result = await _userService.UpdateUserRefreshTokenAsync(refreshToken.Token);
+            var refreshToken = Request.GetRefreshTokenFromCookies();
+
+            var result = await _userService.UpdateUserRefreshTokenAsync(refreshToken);
 
             if (result.IsFailure) return HandleFailure(result);
 

@@ -77,7 +77,7 @@ namespace BookFlix.Web.Controllers
             var userId = _userService.GetCurrentUserID();
             var fileResult = await _userService.GetUserProfilePathAsync(userId);
             if (fileResult.IsFailure) return HandleFailure(fileResult);
-            var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+            var provider = new FileExtensionContentTypeProvider();
             if (!provider.TryGetContentType(fileResult.Value, out var contentType))
             {
                 contentType = "application/octet-stream";

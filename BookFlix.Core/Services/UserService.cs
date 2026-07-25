@@ -173,6 +173,9 @@ namespace BookFlix.Core.Services
 
         public async Task<Result<(string AccessToken, string RefreshToken)>> UpdateUserRefreshTokenAsync(string refreshToken)
         {
+            if (string.IsNullOrWhiteSpace(refreshToken))
+                return UnauthorizedRequest("InvalidRefreshToken");
+
             var user = await GetUserByRefreshTokenAsync(refreshToken);
             if (user is null) return UnauthorizedRequest("InvalidRefreshToken");
 
