@@ -2,20 +2,17 @@ using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
-using Microsoft.Extensions.Logging;
 
 namespace BookFlix.Core.Services
 {
     public class BookService : IBookService
     {
         private readonly IBookRepository _bookRepository;
-        private readonly ILogger<BookService> _logger;
         private readonly IFileService<Book> _fileService;
 
-        public BookService(IBookRepository bookRepository, ILogger<BookService> logger, IFileService<Book> fileService)
+        public BookService(IBookRepository bookRepository, IFileService<Book> fileService)
         {
             _bookRepository = bookRepository;
-            _logger = logger;
             _fileService = fileService;
         }
 
@@ -36,7 +33,6 @@ namespace BookFlix.Core.Services
             var existingBook = await _bookRepository.GetByIDForUpdateAsync(updatedBook.ID);
             if (existingBook is null)
             {
-                _logger.LogWarning("Update failed: Book {BookID} not found.", updatedBook.ID);
                 return Result.Failure<Book>(Error.NotFound("BookNotFound"));
             }
 
@@ -76,10 +72,9 @@ namespace BookFlix.Core.Services
 
                 return Result.Success();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "An unexpected error occurred while deleting book {BookID}", id);
                 return Result.Failure(Error.Failure("BookDeleteError"));
             }
         }
@@ -97,7 +92,6 @@ namespace BookFlix.Core.Services
         {
             if (book.PublicationDate > DateTime.UtcNow)
             {
-                _logger.LogWarning("Validation failed: Future publication date for book {Title}", book.Title);
                 return Result.Failure(Error.Validation("FuturePublicationDate"));
             }
 
@@ -112,7 +106,6 @@ namespace BookFlix.Core.Services
 
             if (isExist)
             {
-                _logger.LogWarning("Validation failed: ISBN {ISBN} already exists.", book.ISBN);
                 return Result.Failure(Error.Conflict("DuplicateIsbn"));
             }
 

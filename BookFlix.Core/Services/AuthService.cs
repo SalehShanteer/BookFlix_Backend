@@ -1,9 +1,8 @@
-﻿using BookFlix.Core.Helpers;
+using BookFlix.Core.Helpers;
 using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
-using Microsoft.Extensions.Logging;
 using static BookFlix.Core.Enums.GeneralEnums;
 
 namespace BookFlix.Core.Services
@@ -13,12 +12,11 @@ namespace BookFlix.Core.Services
         private readonly IUserRepository _userRepository;
         private readonly IUserLogRepository _userLogRepository;
         private readonly IJwtService _jwtService;
-        private readonly ILogger<AuthService> _logger;
-        public AuthService(IUserRepository userRepository, IUserLogRepository userLogRepository, ILogger<AuthService> logger, IJwtService jwtService)
+
+        public AuthService(IUserRepository userRepository, IUserLogRepository userLogRepository, IJwtService jwtService)
         {
             _userRepository = userRepository;
             _userLogRepository = userLogRepository;
-            _logger = logger;
             _jwtService = jwtService;
         }
 
@@ -26,7 +24,6 @@ namespace BookFlix.Core.Services
         {
             if (string.IsNullOrWhiteSpace(email))
             {
-                _logger.LogError("Email is empty or whitespace");
                 return Result.Failure<(string, string)>(Error.Validation("EmailIsEmpty"));
             }
 
@@ -34,13 +31,11 @@ namespace BookFlix.Core.Services
 
             if (user is null)
             {
-                _logger.LogError("User not found");
                 return Result.Failure<(string, string)>(Error.NotFound("UserNotFound"));
             }
 
             if (!PasswordHelper.VerifyPassword(password, user.PasswordHash))
             {
-                _logger.LogError("Invalid password");
                 await LogLoginAttempt(user.ID, false, ipAddress);
 
                 return Result.Failure<(string, string)>(Error.Validation("InvalidPassword"));

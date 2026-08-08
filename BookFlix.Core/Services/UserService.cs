@@ -3,7 +3,6 @@ using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 
 namespace BookFlix.Core.Services
@@ -12,19 +11,17 @@ namespace BookFlix.Core.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
-        private readonly ILogger<UserService> _logger;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IJwtService _jwtService;
         private readonly ICurrentUserContext _currentUserContext;
         private readonly IFileService<User> _fileService;
 
-        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IRefreshTokenRepository refreshTokenRepository, IJwtService jwtService, ILogger<UserService> logger, ICurrentUserContext currentUserContext, IFileService<User> fileService)
+        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, IRefreshTokenRepository refreshTokenRepository, IJwtService jwtService, ICurrentUserContext currentUserContext, IFileService<User> fileService)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _refreshTokenRepository = refreshTokenRepository;
             _jwtService = jwtService;
-            _logger = logger;
             _currentUserContext = currentUserContext;
             _fileService = fileService;
         }
@@ -67,7 +64,6 @@ namespace BookFlix.Core.Services
             var userRole = await _roleRepository.GetByNameAsync("User");
             if (userRole is null)
             {
-                _logger.LogError("Failed to add user: 'User' role not found in database.");
                 return Result.Failure<User>(Error.NotFound("UserRoleNotFound"));
             }
             user.Roles.Add(userRole);
@@ -79,7 +75,6 @@ namespace BookFlix.Core.Services
             var adminRole = await _roleRepository.GetByNameAsync("Admin");
             if (adminRole is null)
             {
-                _logger.LogError("Failed to add admin: 'Admin' role not found in database.");
                 return Result.Failure<User>(Error.NotFound("AdminRoleNotFound"));
             }
             user.Roles.Add(adminRole);
@@ -113,12 +108,10 @@ namespace BookFlix.Core.Services
 
             if (!PasswordHelper.VerifyPassword(oldPassword, existingUser.PasswordHash))
             {
-                _logger.LogWarning("Old password is incorrect.");
                 return Result.Failure(Error.Validation("OldPasswordIncorrect"));
             }
             else if (oldPassword == newPassword)
             {
-                _logger.LogWarning("New password cannot be the same as the old password.");
                 return Result.Failure<User>(Error.Validation("NewPasswordEqualsOldPassword"));
             }
             else
@@ -218,19 +211,16 @@ namespace BookFlix.Core.Services
         {
             if (string.IsNullOrWhiteSpace(username))
             {
-                _logger.LogWarning("Validation failed: The username provided is empty.");
                 return Result.Failure(Error.Validation("UsernameIsEmpty"));
             }
 
             if (username.Length < 4)
             {
-                _logger.LogWarning("Validation failed: The provided username '{Username}' is too short.", username);
                 return Result.Failure(Error.Validation("UsernameLengthTooShort"));
             }
 
             if (await IsUsernameUsedBeforeAsync(username))
             {
-                _logger.LogWarning("Validation failed: The requested username '{Username}' is already taken.", username);
                 return Result.Failure(Error.Conflict("UsernameUsed"));
             }
 
@@ -241,13 +231,11 @@ namespace BookFlix.Core.Services
         {
             if (string.IsNullOrWhiteSpace(email))
             {
-                _logger.LogWarning("Validation failed: The email address provided is empty.");
                 return Result.Failure(Error.Validation("EmailEmpty"));
             }
 
             if (await IsEmailUsedBeforeAsync(email))
             {
-                _logger.LogWarning("Validation failed: The provided email address '{Email}' is already registered.", email);
                 return Result.Failure(Error.Conflict("EmailUsed"));
             }
 
@@ -264,13 +252,11 @@ namespace BookFlix.Core.Services
         {
             if (string.IsNullOrWhiteSpace(password))
             {
-                _logger.LogWarning("Validation failed: The password provided is empty or contains only whitespace.");
                 return Result.Failure(Error.Validation("PasswordEmpty"));
             }
 
             if (!PasswordHelper.IsStrongPassword(password))
             {
-                _logger.LogWarning("Validation failed: The provided password does not meet the minimum security requirements.");
                 return Result.Failure(Error.Validation("PasswordWeak"));
             }
 
@@ -292,14 +278,11 @@ namespace BookFlix.Core.Services
 
         private Result<User> ReturnUserNotFound()
         {
-            _logger.LogWarning("The user is not found");
-
             return Result.Failure<User>(Error.NotFound("UserNotFound"));
         }
 
         private Result<(string AccessToken, string RefreshToken)> UnauthorizedRequest(string message)
         {
-            _logger.LogWarning(message);
             return Result.Failure<(string, string)>(Error.Unauthorized(message));
         }
     }
