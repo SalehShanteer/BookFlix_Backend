@@ -2,6 +2,7 @@ using BookFlix.Core.Helpers;
 using BookFlix.Web.Mapper_Interfaces;
 using BookFlix.Web.Mappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -14,6 +15,7 @@ namespace BookFlix.Web
     {
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
+            AddDataProtection(services, configuration);
             AddRateLimiting(services);
             AddAuthentication(services, configuration);
             AddCors(services);
@@ -47,6 +49,17 @@ namespace BookFlix.Web
             throw new Exception("JWTNotFound");
         }
 
+        private static void AddDataProtection(IServiceCollection services, IConfiguration configuration)
+        {
+            var dataProtectionBuilder = services.AddDataProtection()
+              .SetApplicationName("BookFlix");
+
+            var keysPath = configuration["DataProtection:KeysPath"];
+            if (!string.IsNullOrWhiteSpace(keysPath))
+            {
+                dataProtectionBuilder.PersistKeysToFileSystem(new DirectoryInfo(keysPath));
+            }
+        }
         private static void AddAuthentication(IServiceCollection services, IConfiguration configuration)
         {
             var jwtSettings = configuration.GetSection("Jwt");

@@ -12,14 +12,7 @@ namespace BookFlix.Core.Services
     {
         public override string FolderName => "BookStorage";
 
-        public BookFileService(
-            IBookRepository bookRepository, 
-            IUploadedFileRepository uploadedFileRepository, 
-            ILogger<BookFileService> logger,
-            IWebHostEnvironment environment)
-            : base(bookRepository, uploadedFileRepository, logger, environment)
-        {
-        }
+        public BookFileService(IBookRepository bookRepository, IUploadedFileRepository uploadedFileRepository, ILogger<BookFileService> logger, IWebHostEnvironment environment) : base(bookRepository, uploadedFileRepository, logger, environment){}
 
         public override Result ValidateFile(IFormFile file)
         {

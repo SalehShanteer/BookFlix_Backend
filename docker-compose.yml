@@ -34,9 +34,13 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Server=db;Database=BookFlix;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;
       - Jwt__Key=${JWT_KEY}
+      - DataProtection__KeysPath=/root/.aspnet/DataProtection-Keys
+    volumes:
+      - dp_keys:/root/.aspnet/DataProtection-Keys
     depends_on:
       db-migrator:
         condition: service_completed_successfully
 
 volumes:
   mssql_data:
+  dp_keys:
