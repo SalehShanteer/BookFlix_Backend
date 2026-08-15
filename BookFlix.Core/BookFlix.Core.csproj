@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.5" />
     <PackageReference Include="Microsoft.IDentityModel.JsonWebTokens" Version="8.17.0" />
     <PackageReference Include="System.IDentityModel.Tokens.Jwt" Version="8.17.0" />
 	 <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />

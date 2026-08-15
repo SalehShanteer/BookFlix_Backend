@@ -3,7 +3,6 @@ using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
-using Microsoft.AspNetCore.Http;
 
 namespace BookFlix.Core.Services
 {
@@ -41,7 +40,7 @@ namespace BookFlix.Core.Services
             return Result.Success(fileResult.Value);
         }
 
-        public async Task<Result<Guid>> UploadProfileImageAsync(Guid userID, IFormFile file)
+        public async Task<Result<Guid>> UploadProfileImageAsync(Guid userID, FileUploadModel file)
         {
             return await _fileService.UploadFileAsync(userID, file);
         }

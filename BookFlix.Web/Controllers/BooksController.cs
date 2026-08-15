@@ -99,7 +99,8 @@ namespace BookFlix.Web.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadBookAsync(Guid id, IFormFile file)
         {
-            var result = await _fileService.UploadFileAsync(id, file);
+            var fileModule = file.ToFileUploadModel();
+            var result = await _fileService.UploadFileAsync(id, fileModule);
 
             if (result.IsFailure) return HandleFailure(result);
 

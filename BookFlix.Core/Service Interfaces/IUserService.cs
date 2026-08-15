@@ -1,6 +1,5 @@
 using BookFlix.Core.Models;
 using BookFlix.Core.Services.Validation;
-using Microsoft.AspNetCore.Http;
 
 namespace BookFlix.Core.Service_Interfaces
 {
@@ -17,7 +16,7 @@ namespace BookFlix.Core.Service_Interfaces
         Task RevokeUserRefreshTokenAsync(string refreshToken);
         Task<IReadOnlyCollection<User>> GetAllUsersAsync();
         Task<Result<string>> GetUserProfilePathAsync(Guid userID);
-        Task<Result<Guid>> UploadProfileImageAsync(Guid userID, IFormFile file);
+        Task<Result<Guid>> UploadProfileImageAsync(Guid userID, FileUploadModel file);
         Guid GetCurrentUserID();
     }
 }

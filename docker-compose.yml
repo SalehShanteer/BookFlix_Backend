@@ -25,6 +25,18 @@ services:
     entrypoint: >
       sqlpackage  /Action:Publish  /SourceFile:/dacpac/BookFlix.Database.dacpac  /TargetServerName:db  /TargetDatabaseName:BookFlix  /TargetUser:sa  /TargetPassword:${MSSQL_SA_PASSWORD}  /TargetEncryptConnection:False /TargetTrustServerCertificate:True
 
+  minio:
+    image: minio/minio:latest
+    container_name: BookFlix_MinIO
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin_1234
+    volumes: -minio_data:/data
+    command: server /data --console-address ":9001"
+
   web:
     build:
       context: .
@@ -35,12 +47,20 @@ services:
       - ConnectionStrings__DefaultConnection=Server=db;Database=BookFlix;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;
       - Jwt__Key=${JWT_KEY}
       - DataProtection__KeysPath=/root/.aspnet/DataProtection-Keys
+      - S3__ServiceUrl=http://minio:9000
+      - S3__AccessKey=admin
+      - S3__SecretKey=admin_1234
+      - S3__BucketName=bookflix
+      - S3__ForcePathStyle=true
     volumes:
       - dp_keys:/root/.aspnet/DataProtection-Keys
     depends_on:
       db-migrator:
         condition: service_completed_successfully
+      minio:
+        condition: service_started
 
 volumes:
   mssql_data:
   dp_keys:
+  minio_data:

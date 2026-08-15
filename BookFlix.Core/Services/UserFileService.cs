@@ -1,11 +1,9 @@
+using BookFlix.Core.Abstractions;
 using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace BookFlix.Core.Services
 {
@@ -13,16 +11,11 @@ namespace BookFlix.Core.Services
     {
         public override string FolderName => "UserImages";
 
-        public UserFileService(
-            IUserRepository userRepository, 
-            IUploadedFileRepository uploadedFileRepository, 
-            ILogger<UserFileService> logger,
-            IWebHostEnvironment environment)
-            : base(userRepository, uploadedFileRepository, logger, environment)
+        public UserFileService(IFileStorageService fileStorageService, IUserRepository userRepository, IUploadedFileRepository uploadedFileRepository, ILogger<UserFileService> logger) : base(fileStorageService, userRepository, uploadedFileRepository, logger)
         {
         }
 
-        public override Result ValidateFile(IFormFile file)
+        public override Result ValidateFile(FileUploadModel file)
         {
             if (file == null || file.Length == 0)
             {

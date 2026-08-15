@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace BookFlix.Core.Helpers
+﻿namespace BookFlix.Core.Helpers
 {
     public static class HttpRequestExtension
     {

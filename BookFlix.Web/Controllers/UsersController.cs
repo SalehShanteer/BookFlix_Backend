@@ -92,7 +92,9 @@ namespace BookFlix.Web.Controllers
         public async Task<IActionResult> UploadProfileImageAsync(IFormFile file)
         {
             var userId = _userService.GetCurrentUserID();
-            var result = await _userService.UploadProfileImageAsync(userId, file);
+            var fileModel = file.ToFileUploadModel();
+
+            var result = await _userService.UploadProfileImageAsync(userId, fileModel);
 
             if (result.IsFailure) return HandleFailure(result);
 

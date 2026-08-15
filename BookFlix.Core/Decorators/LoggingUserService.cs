@@ -2,7 +2,6 @@ using BookFlix.Core.Logging;
 using BookFlix.Core.Models;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace BookFlix.Core.Decorators
@@ -131,7 +130,7 @@ namespace BookFlix.Core.Decorators
             return await _inner.GetUserProfilePathAsync(userID);
         }
 
-        public async Task<Result<Guid>> UploadProfileImageAsync(Guid userID, IFormFile file)
+        public async Task<Result<Guid>> UploadProfileImageAsync(Guid userID, FileUploadModel file)
         {
             _logger.LogUploadProfileImageExecuting(userID);
             var result = await _inner.UploadProfileImageAsync(userID, file);
