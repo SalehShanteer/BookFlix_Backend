@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookFlix.Infrastructure.Repositories
 {
-    public class UserRepository : EntityRepository<User>, IUserRepository
+    internal class UserRepository : EntityRepository<User>, IUserRepository
     {
         public UserRepository(AppDbContext context) : base(context)
         {

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookFlix.Infrastructure.Repositories
 {
-    public class UserLogRepository : IUserLogRepository
+    internal class UserLogRepository : IUserLogRepository
     {
         private readonly AppDbContext _context;
         public UserLogRepository(AppDbContext context)

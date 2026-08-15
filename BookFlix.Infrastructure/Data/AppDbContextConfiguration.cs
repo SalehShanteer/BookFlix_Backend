@@ -2,7 +2,7 @@
 
 namespace BookFlix.Infrastructure.Data
 {
-    public static class AppDbContextConfiguration
+    internal static class AppDbContextConfiguration
     {
         public static void Configure(DbContextOptionsBuilder<AppDbContext> optionsBuilder, string constr)
         {

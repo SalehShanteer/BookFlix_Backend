@@ -27,4 +27,8 @@
     <ProjectReference Include="..\BookFlix.Core\BookFlix.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Storage\" />
+  </ItemGroup>
+
 </Project>

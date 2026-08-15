@@ -4,7 +4,7 @@ using BookFlix.Infrastructure.Data;
 
 namespace BookFlix.Infrastructure.Repositories
 {
-    public class TransactionRepository : ITransactionRepository
+    internal class TransactionRepository : ITransactionRepository
     {
         private readonly AppDbContext _context;
 

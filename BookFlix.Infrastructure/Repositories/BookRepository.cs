@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookFlix.Infrastructure.Repositories
 {
-    public class BookRepository : EntityRepository<Book>, IBookRepository
+    internal class BookRepository : EntityRepository<Book>, IBookRepository
     {
         public BookRepository(AppDbContext context) : base(context)
         {

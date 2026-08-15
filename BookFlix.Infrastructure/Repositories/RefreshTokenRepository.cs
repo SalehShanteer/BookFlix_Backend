@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookFlix.Infrastructure.Repositories
 {
-    public class RefreshTokenRepository : IRefreshTokenRepository
+    internal class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly AppDbContext _context;
         public RefreshTokenRepository(AppDbContext context)

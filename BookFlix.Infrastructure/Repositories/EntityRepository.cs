@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookFlix.Infrastructure.Repositories
 {
-    public class EntityRepository<T> : TransactionRepository, IEntityRepository<T> where T : class, IEntity
+    internal class EntityRepository<T> : TransactionRepository, IEntityRepository<T> where T : class, IEntity
     {
         protected readonly AppDbContext Context;
 

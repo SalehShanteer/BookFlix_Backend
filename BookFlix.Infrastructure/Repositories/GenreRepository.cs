@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookFlix.Infrastructure.Repositories
 {
-    public class GenreRepository : IGenreRepository
+    internal class GenreRepository : IGenreRepository
     {
         private readonly AppDbContext _context;
 

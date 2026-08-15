@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookFlix.Infrastructure.Repositories
 {
-    public class RoleRepository : EntityRepository<Role>, IRoleRepository
+    internal class RoleRepository : EntityRepository<Role>, IRoleRepository
     {
         public RoleRepository(AppDbContext context) : base(context)
         {
