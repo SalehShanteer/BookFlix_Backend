@@ -111,5 +111,10 @@ namespace BookFlix.Core.Decorators
             }
             return result;
         }
+
+        public async Task<Result<(Stream Stream, string ContentType, string FileName)>> GetBookFileStreamAsync(Guid bookID)
+        {
+            return await _inner.GetBookFileStreamAsync(bookID);
+        }
     }
 }

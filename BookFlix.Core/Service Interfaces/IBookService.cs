@@ -1,4 +1,4 @@
-﻿using BookFlix.Core.Models;
+using BookFlix.Core.Models;
 using BookFlix.Core.Services.Validation;
 
 namespace BookFlix.Core.Service_Interfaces
@@ -14,5 +14,6 @@ namespace BookFlix.Core.Service_Interfaces
         Task<Result> DeleteBookAsync(Guid id);
         Task<Book> GetBookByIsbnAsync(string isbn);
         Task<Result<string>> GetBookFilePathAsync(Guid bookID);
+        Task<Result<(Stream Stream, string ContentType, string FileName)>> GetBookFileStreamAsync(Guid bookID);
     }
 }

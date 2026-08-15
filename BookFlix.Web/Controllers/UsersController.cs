@@ -75,15 +75,10 @@ namespace BookFlix.Web.Controllers
         public async Task<IActionResult> GetUserProfileImageAsync()
         {
             var userId = _userService.GetCurrentUserID();
-            var fileResult = await _userService.GetUserProfilePathAsync(userId);
+            var fileResult = await _userService.GetUserProfileStreamAsync(userId);
             if (fileResult.IsFailure) return HandleFailure(fileResult);
-            var provider = new FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(fileResult.Value, out var contentType))
-            {
-                contentType = "application/octet-stream";
-            }
 
-            return PhysicalFile(fileResult.Value, contentType);
+            return File(fileResult.Value.Stream, fileResult.Value.ContentType);
         }
 
         [HttpPut("ProfileImage")]
@@ -92,7 +87,7 @@ namespace BookFlix.Web.Controllers
         public async Task<IActionResult> UploadProfileImageAsync(IFormFile file)
         {
             var userId = _userService.GetCurrentUserID();
-            var fileModel = file.ToFileUploadModel();
+            await using var fileModel = file.ToFileUploadModel();
 
             var result = await _userService.UploadProfileImageAsync(userId, fileModel);
 

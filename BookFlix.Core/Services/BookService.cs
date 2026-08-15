@@ -56,6 +56,21 @@ namespace BookFlix.Core.Services
 
             return Result.Success(fileResult.Value);
         }
+
+        public async Task<Result<(Stream Stream, string ContentType, string FileName)>> GetBookFileStreamAsync(Guid bookID)
+        {
+            var book = await GetBookByIDAsync(bookID);
+            if (book is null) return Result.Failure<(Stream, string, string)>(Error.NotFound("BookNotFound"));
+
+            var fileID = book.FileID;
+            if (!fileID.HasValue) return Result.Failure<(Stream, string, string)>(Error.NotFound("BookFileNotFound"));
+
+            var fileResult = await _fileService.GetFileStreamAsync(fileID.Value);
+            if (fileResult.IsFailure) return Result.Failure<(Stream, string, string)>(fileResult.Error);
+
+            var fileName = $"{book.Title}.pdf";
+            return Result.Success((fileResult.Value.Stream, fileResult.Value.ContentType, fileName));
+        }
         public async Task<Result> DeleteBookAsync(Guid id)
         {
             using var transaction = await _bookRepository.BeginTransactionAsync();

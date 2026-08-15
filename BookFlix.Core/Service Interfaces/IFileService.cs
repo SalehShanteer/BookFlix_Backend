@@ -11,6 +11,7 @@ namespace BookFlix.Core.Service_Interfaces
         Task<Result<Guid>> UploadFileAsync(Guid entityID, FileUploadModel file);
         Result ValidateFile(FileUploadModel file);
         Task<Result<string>> GetFilePathAsync(Guid fileId);
+        Task<Result<(Stream Stream, string ContentType)>> GetFileStreamAsync(Guid fileId);
     }
 
     public abstract class FileService<T> : IFileService<T> where T : class, IEntityFile
@@ -61,7 +62,7 @@ namespace BookFlix.Core.Service_Interfaces
                     }
                 }
 
-                filePath = await _fileStorageService.UploadFileAsync(file.Stream, file.FileName, file.ContentType);
+                filePath = await _fileStorageService.UploadFileAsync(file.Stream, file.FileName, file.ContentType, FolderName);
         
                 if (uploadedFile is null)
                 {
@@ -111,6 +112,18 @@ namespace BookFlix.Core.Service_Interfaces
             }
 
             return Result.Success(uploadedFile.FileLocation);
+        }
+
+        public async Task<Result<(Stream Stream, string ContentType)>> GetFileStreamAsync(Guid fileId)
+        {
+            var uploadedFile = await _uploadedFileRepository.GetByIDAsync(fileId);
+            if (uploadedFile is null)
+            {
+                return Result.Failure<(Stream, string)>(Error.NotFound("FileNotFound"));
+            }
+
+            var stream = await _fileStorageService.GetFileStreamAsync(uploadedFile.FileLocation);
+            return Result.Success((stream, uploadedFile.ContentType));
         }
     }
 }

@@ -130,6 +130,11 @@ namespace BookFlix.Core.Decorators
             return await _inner.GetUserProfilePathAsync(userID);
         }
 
+        public async Task<Result<(Stream Stream, string ContentType)>> GetUserProfileStreamAsync(Guid userID)
+        {
+            return await _inner.GetUserProfileStreamAsync(userID);
+        }
+
         public async Task<Result<Guid>> UploadProfileImageAsync(Guid userID, FileUploadModel file)
         {
             _logger.LogUploadProfileImageExecuting(userID);

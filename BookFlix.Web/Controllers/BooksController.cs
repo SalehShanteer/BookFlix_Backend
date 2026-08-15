@@ -99,8 +99,8 @@ namespace BookFlix.Web.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadBookAsync(Guid id, IFormFile file)
         {
-            var fileModule = file.ToFileUploadModel();
-            var result = await _fileService.UploadFileAsync(id, fileModule);
+            await using var fileModel = file.ToFileUploadModel();
+            var result = await _fileService.UploadFileAsync(id, fileModel);
 
             if (result.IsFailure) return HandleFailure(result);
 
@@ -113,21 +113,15 @@ namespace BookFlix.Web.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetBookFileAsync(Guid id, [FromQuery] bool download = false)
         {
-            var bookFilePath = await _bookService.GetBookFilePathAsync(id);
-            if (bookFilePath.IsFailure) return HandleFailure(bookFilePath);
-
-            var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(bookFilePath.Value, out var contentType))
-            {
-                contentType = "application/octet-stream";
-            }
+            var bookFileResult = await _bookService.GetBookFileStreamAsync(id);
+            if (bookFileResult.IsFailure) return HandleFailure(bookFileResult);
 
             if (download)
             {
-                return PhysicalFile(bookFilePath.Value, contentType, Path.GetFileName(bookFilePath.Value));
+                return File(bookFileResult.Value.Stream, bookFileResult.Value.ContentType, bookFileResult.Value.FileName);
             }
 
-            return PhysicalFile(bookFilePath.Value, contentType);
+            return File(bookFileResult.Value.Stream, bookFileResult.Value.ContentType);
         }
 
     }
