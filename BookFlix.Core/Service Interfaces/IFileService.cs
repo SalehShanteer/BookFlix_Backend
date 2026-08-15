@@ -10,7 +10,6 @@ namespace BookFlix.Core.Service_Interfaces
     {
         Task<Result<Guid>> UploadFileAsync(Guid entityID, FileUploadModel file);
         Result ValidateFile(FileUploadModel file);
-        Task<Result<string>> GetFilePathAsync(Guid fileId);
         Task<Result<(Stream Stream, string ContentType)>> GetFileStreamAsync(Guid fileId);
     }
 

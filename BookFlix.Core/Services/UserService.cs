@@ -25,21 +25,6 @@ namespace BookFlix.Core.Services
             _fileService = fileService;
         }
 
-        public async Task<Result<string>> GetUserProfilePathAsync(Guid userID)
-        {
-            var userResult = await GetUserByIDAsync(userID);
-            if (userResult.IsFailure) return Result.Failure<string>(userResult.Error);
-
-            var fileID = userResult.Value.FileID;
-            if (!fileID.HasValue) return Result.Failure<string>(Error.NotFound("UserProfileImageNotFound"));
-
-            var fileResult = await _fileService.GetFilePathAsync(fileID.Value);
-
-            if (fileResult.IsFailure) return Result.Failure<string>(fileResult.Error);
-
-            return Result.Success(fileResult.Value);
-        }
-
         public async Task<Result<(Stream Stream, string ContentType)>> GetUserProfileStreamAsync(Guid userID)
         {
             var userResult = await GetUserByIDAsync(userID);

@@ -101,17 +101,6 @@ namespace BookFlix.Core.Decorators
             return await _inner.GetBookByIsbnAsync(isbn);
         }
 
-        public async Task<Result<string>> GetBookFilePathAsync(Guid bookID)
-        {
-            _logger.LogGetBookFilePathExecuting(bookID);
-            var result = await _inner.GetBookFilePathAsync(bookID);
-            if (result.IsFailure)
-            {
-                _logger.LogGetBookFilePathFailed(bookID, result.Error.Key);
-            }
-            return result;
-        }
-
         public async Task<Result<(Stream Stream, string ContentType, string FileName)>> GetBookFileStreamAsync(Guid bookID)
         {
             return await _inner.GetBookFileStreamAsync(bookID);

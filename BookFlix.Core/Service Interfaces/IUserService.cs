@@ -15,7 +15,6 @@ namespace BookFlix.Core.Service_Interfaces
         Task<Result<(string AccessToken, string RefreshToken)>> UpdateUserRefreshTokenAsync(string refreshToken);
         Task RevokeUserRefreshTokenAsync(string refreshToken);
         Task<IReadOnlyCollection<User>> GetAllUsersAsync();
-        Task<Result<string>> GetUserProfilePathAsync(Guid userID);
         Task<Result<(Stream Stream, string ContentType)>> GetUserProfileStreamAsync(Guid userID);
         Task<Result<Guid>> UploadProfileImageAsync(Guid userID, FileUploadModel file);
         Guid GetCurrentUserID();

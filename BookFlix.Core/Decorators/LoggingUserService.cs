@@ -124,12 +124,6 @@ namespace BookFlix.Core.Decorators
             return await _inner.GetAllUsersAsync();
         }
 
-        public async Task<Result<string>> GetUserProfilePathAsync(Guid userID)
-        {
-            _logger.LogGetUserProfilePathExecuting(userID);
-            return await _inner.GetUserProfilePathAsync(userID);
-        }
-
         public async Task<Result<(Stream Stream, string ContentType)>> GetUserProfileStreamAsync(Guid userID)
         {
             return await _inner.GetUserProfileStreamAsync(userID);

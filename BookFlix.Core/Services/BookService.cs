@@ -42,21 +42,6 @@ namespace BookFlix.Core.Services
             return Result.Success(existingBook);
         }
 
-        public async Task<Result<string>> GetBookFilePathAsync(Guid bookID)
-        {
-            var book = await GetBookByIDAsync(bookID);
-            if (book is null) return Result.Failure<string>(Error.NotFound("BookNotFound"));
-
-            var fileID = book.FileID;
-            if (!fileID.HasValue) return Result.Failure<string>(Error.NotFound("BookFileNotFound"));
-
-            var fileResult = await _fileService.GetFilePathAsync(fileID.Value);
-
-            if (fileResult.IsFailure) return Result.Failure<string>(fileResult.Error);
-
-            return Result.Success(fileResult.Value);
-        }
-
         public async Task<Result<(Stream Stream, string ContentType, string FileName)>> GetBookFileStreamAsync(Guid bookID)
         {
             var book = await GetBookByIDAsync(bookID);
@@ -127,7 +112,7 @@ namespace BookFlix.Core.Services
             return Result.Success();
         }
 
-        private void UpdateBookProperties(Book existingBook, Book updatedBook)
+        private static void UpdateBookProperties(Book existingBook, Book updatedBook)
         {
             existingBook.Title = updatedBook.Title;
             existingBook.Description = updatedBook.Description;
