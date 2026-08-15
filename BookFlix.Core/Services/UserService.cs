@@ -248,7 +248,7 @@ namespace BookFlix.Core.Services
             var isAdmin = _currentUserContext.IsAdmin;
             return currentUserId == userID || isAdmin;
         }
-        private Result ValidatePassword(string password)
+        private static Result ValidatePassword(string password)
         {
             if (string.IsNullOrWhiteSpace(password))
             {
@@ -276,12 +276,12 @@ namespace BookFlix.Core.Services
             return Result.Success();
         }
 
-        private Result<User> ReturnUserNotFound()
+        private static Result<User> ReturnUserNotFound()
         {
             return Result.Failure<User>(Error.NotFound("UserNotFound"));
         }
 
-        private Result<(string AccessToken, string RefreshToken)> UnauthorizedRequest(string message)
+        private static Result<(string AccessToken, string RefreshToken)> UnauthorizedRequest(string message)
         {
             return Result.Failure<(string, string)>(Error.Unauthorized(message));
         }
