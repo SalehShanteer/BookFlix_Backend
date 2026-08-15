@@ -1,4 +1,4 @@
-using BookFlix.Core.Helpers;
+using BookFlix.Web.Extensions;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Web.Dtos.Auth;
 using BookFlix.Web.Dtos.User;

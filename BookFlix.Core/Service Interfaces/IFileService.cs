@@ -19,7 +19,6 @@ namespace BookFlix.Core.Service_Interfaces
         private readonly IEntityfileRepository<T> _repository;
         private readonly IUploadedFileRepository _uploadedFileRepository;
         private readonly ILogger<FileService<T>> _logger; // should be removed and use decorator pattern instead
-        private string _directory;
 
         public abstract string FolderName { get; }
 
@@ -111,13 +110,7 @@ namespace BookFlix.Core.Service_Interfaces
                 return Result.Failure<string>(Error.NotFound("FileNotFound"));
             }
 
-            var filePath = Path.Combine(_directory, uploadedFile.FileLocation);
-            if (!File.Exists(filePath))
-            {
-                return Result.Failure<string>(Error.NotFound("FileNotFound"));
-            }
-
-            return Result.Success(filePath);
+            return Result.Success(uploadedFile.FileLocation);
         }
     }
 }

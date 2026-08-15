@@ -1,8 +1,8 @@
-﻿using BookFlix.Core.Service_Interfaces;
+using BookFlix.Core.Service_Interfaces;
 using System.ComponentModel;
 using System.Security.Claims;
 
-namespace BookFlix.Core.Services
+namespace BookFlix.Web.Services
 {
     public class CurrentUserContext : ICurrentUserContext
     {
@@ -19,8 +19,7 @@ namespace BookFlix.Core.Services
 
         public string GetClaim(string claimType)
         {
-            
-            return User.FindFirst(claimType)?.Value;
+            return User?.FindFirst(claimType)?.Value;
         }
 
         public T? GetClaim<T>(string claimType) where T : struct
@@ -38,6 +37,7 @@ namespace BookFlix.Core.Services
                 return null;
             }
         }
+
         public IEnumerable<T> GetClaims<T>(string claimType)
         {
             var claims = User?.FindAll(claimType);

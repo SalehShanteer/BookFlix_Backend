@@ -11,8 +11,6 @@ namespace BookFlix.Core
     {
         public static IServiceCollection AddCore(this IServiceCollection services)
         {
-            services.AddHttpContextAccessor();
-
             services.AddScoped<BookService>();
             services.AddScoped<IBookService>(sp =>
                 new LoggingBookService(
@@ -35,7 +33,6 @@ namespace BookFlix.Core
             services.AddScoped<IFileService<User>, UserFileService>();
             services.AddScoped<IUserLogService, UserLogService>();
             services.AddScoped<IJwtService, JwtService>();
-            services.AddScoped<ICurrentUserContext, CurrentUserContext>();
 
             return services;
         }

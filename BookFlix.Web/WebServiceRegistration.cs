@@ -1,6 +1,8 @@
-using BookFlix.Core.Helpers;
+using BookFlix.Core.Service_Interfaces;
+using BookFlix.Web.Extensions;
 using BookFlix.Web.Mapper_Interfaces;
 using BookFlix.Web.Mappers;
+using BookFlix.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -15,6 +17,9 @@ namespace BookFlix.Web
     {
         public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserContext, CurrentUserContext>();
+
             AddDataProtection(services, configuration);
             AddRateLimiting(services);
             AddAuthentication(services, configuration);
@@ -87,7 +92,7 @@ namespace BookFlix.Web
                 {
                     OnMessageReceived = context =>
                     {
-                        if (context.Request.Cookies.TryGetValue(HttpResponseExtension.accessTokenCookieName, out var token))
+                        if (context.Request.Cookies.TryGetValue(HttpResponseExtension.AccessTokenCookieName, out var token))
                         {
                             context.Token = token;
                         }

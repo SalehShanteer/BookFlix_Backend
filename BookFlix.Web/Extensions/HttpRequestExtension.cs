@@ -1,12 +1,14 @@
-﻿namespace BookFlix.Core.Helpers
+using Microsoft.AspNetCore.Http;
+
+namespace BookFlix.Web.Extensions
 {
     public static class HttpRequestExtension
     {
-        public const string refreshTokenCookieName = "bf-refresh-token";
+        public const string RefreshTokenCookieName = "bf-refresh-token";
 
         public static string GetRefreshTokenFromCookies(this HttpRequest request)
         {
-            if (request.Cookies.TryGetValue(refreshTokenCookieName, out var refreshToken))
+            if (request.Cookies.TryGetValue(RefreshTokenCookieName, out var refreshToken))
             {
                 return refreshToken;
             }

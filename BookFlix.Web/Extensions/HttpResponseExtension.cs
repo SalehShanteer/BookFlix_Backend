@@ -1,11 +1,9 @@
-using Microsoft.Extensions.Configuration;
-
-namespace BookFlix.Core.Helpers
+namespace BookFlix.Web.Extensions
 {
     public static class HttpResponseExtension
     {
-        public const string accessTokenCookieName = "bf-access-token";
-        public const string refreshTokenCookieName = "bf-refresh-token";
+        public const string AccessTokenCookieName = "bf-access-token";
+        public const string RefreshTokenCookieName = "bf-refresh-token";
 
         public static void SetTokenCookies(this HttpResponse response, string accessToken, string refreshToken, IConfiguration configuration)
         {
@@ -32,8 +30,8 @@ namespace BookFlix.Core.Helpers
                 Expires = DateTimeOffset.UtcNow.AddDays(refreshExpiryDays)
             };
 
-            response.Cookies.Append(accessTokenCookieName, accessToken, accessTokenOptions);
-            response.Cookies.Append(refreshTokenCookieName, refreshToken, refreshTokenOptions);
+            response.Cookies.Append(AccessTokenCookieName, accessToken, accessTokenOptions);
+            response.Cookies.Append(RefreshTokenCookieName, refreshToken, refreshTokenOptions);
         }
 
         public static void DeleteTokenCookies(this HttpResponse response)
@@ -53,8 +51,8 @@ namespace BookFlix.Core.Helpers
                 SameSite = SameSiteMode.Strict,
                 Path = "/"
             };
-            response.Cookies.Delete(accessTokenCookieName, accessTokenOptions);
-            response.Cookies.Delete(refreshTokenCookieName, refreshTokenOptions);
+            response.Cookies.Delete(AccessTokenCookieName, accessTokenOptions);
+            response.Cookies.Delete(RefreshTokenCookieName, refreshTokenOptions);
         }
     }
 }
