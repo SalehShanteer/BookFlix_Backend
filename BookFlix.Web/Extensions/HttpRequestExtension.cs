@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace BookFlix.Web.Extensions
 {
     public static class HttpRequestExtension

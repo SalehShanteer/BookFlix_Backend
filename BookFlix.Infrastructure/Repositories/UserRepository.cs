@@ -28,7 +28,6 @@ namespace BookFlix.Infrastructure.Repositories
 
         public async Task<User> GetByIDWithRelationsAsync(Guid id)
             => await Context.Users
-                .AsNoTracking()
                 .AsSplitQuery()
                 .Include(u => u.RefreshTokens)
                 .Include(u => u.Reviews)

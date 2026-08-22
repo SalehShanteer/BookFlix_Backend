@@ -99,7 +99,7 @@ namespace BookFlix.Web.Controllers
             return Ok();
         }
 
-        [HttpPost("Logout")]
+        [HttpPost("logout")]
         [DisableRateLimiting]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> LogoutAsync()

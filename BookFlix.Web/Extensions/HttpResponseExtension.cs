@@ -11,11 +11,12 @@ namespace BookFlix.Web.Extensions
 
             double accessExpiryMinutes = double.TryParse(jwtSettings["ExpireMinutes"], out var accMin) ? accMin : 30;
             double refreshExpiryDays = double.TryParse(jwtSettings["RefreshTokenExpireDays"], out var refDays) ? refDays : 7;
+            var isHttps = response.HttpContext.Request.IsHttps;
 
             var accessTokenOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = isHttps,
                 SameSite = SameSiteMode.Strict,
                 Path = "/",
                 Expires = DateTimeOffset.UtcNow.AddMinutes(accessExpiryMinutes)
@@ -24,7 +25,7 @@ namespace BookFlix.Web.Extensions
             var refreshTokenOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                Secure = isHttps,
                 SameSite = SameSiteMode.Strict,
                 Path = "/",
                 Expires = DateTimeOffset.UtcNow.AddDays(refreshExpiryDays)
