@@ -3,7 +3,6 @@ using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
-using Microsoft.Extensions.Logging;
 
 namespace BookFlix.Core.Services
 {
@@ -11,7 +10,7 @@ namespace BookFlix.Core.Services
     {
         public override string FolderName => "UserImages";
 
-        public UserFileService(IFileStorageService fileStorageService, IUserRepository userRepository, IUploadedFileRepository uploadedFileRepository, ILogger<UserFileService> logger) : base(fileStorageService, userRepository, uploadedFileRepository, logger)
+        public UserFileService(IFileStorageService fileStorageService, IUserRepository userRepository, IUploadedFileRepository uploadedFileRepository) : base(fileStorageService, userRepository, uploadedFileRepository)
         {
         }
 

@@ -2,7 +2,6 @@ using BookFlix.Core.Abstractions;
 using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Services.Validation;
-using Microsoft.Extensions.Logging;
 
 namespace BookFlix.Core.Service_Interfaces
 {
@@ -18,16 +17,13 @@ namespace BookFlix.Core.Service_Interfaces
         private readonly IFileStorageService _fileStorageService;
         private readonly IEntityfileRepository<T> _repository;
         private readonly IUploadedFileRepository _uploadedFileRepository;
-        private readonly ILogger<FileService<T>> _logger; // should be removed and use decorator pattern instead
-
         public abstract string FolderName { get; }
 
-        protected FileService(IFileStorageService fileStorageService, IEntityfileRepository<T> repository, IUploadedFileRepository uploadedFileRepository, ILogger<FileService<T>> logger)
+        protected FileService(IFileStorageService fileStorageService, IEntityfileRepository<T> repository, IUploadedFileRepository uploadedFileRepository)
         {
             _fileStorageService = fileStorageService;
             _repository = repository;
             _uploadedFileRepository = uploadedFileRepository;
-            _logger = logger;
         }
 
         public abstract Result ValidateFile(FileUploadModel file);
@@ -40,7 +36,6 @@ namespace BookFlix.Core.Service_Interfaces
             var entity = await _repository.GetByIDAsync(entityID);
             if (entity is null)
             {
-                _logger.LogError("{EntityType} with ID {EntityID} not found.", typeof(T).Name, entityID);
                 return Result.Failure<Guid>(Error.NotFound($"{typeof(T).Name}NotFound"));
             }
 
@@ -87,30 +82,17 @@ namespace BookFlix.Core.Service_Interfaces
 
                 return Result.Success(uploadedFile.ID);
             }
-            catch (IOException ex)
+            catch (IOException)
             {
                 await transaction.RollbackAsync();
                 await _fileStorageService.DeleteFileAsync(filePath);
-                _logger.LogError(ex, "IO error uploading file for {EntityType} ID {EntityID}", typeof(T).Name, entityID);
                 return Result.Failure<Guid>(Error.Failure("FileSaveStorageError"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Unexpected error uploading file for {EntityType} ID {EntityID}", typeof(T).Name, entityID);
                 return Result.Failure<Guid>(Error.Failure("FileUnexpectedUploadError"));
             }
-        }
-
-        public async Task<Result<string>> GetFilePathAsync(Guid fileId)
-        {
-            var uploadedFile = await _uploadedFileRepository.GetByIDAsync(fileId);
-            if (uploadedFile is null)
-            {
-                return Result.Failure<string>(Error.NotFound("FileNotFound"));
-            }
-
-            return Result.Success(uploadedFile.FileLocation);
         }
 
         public async Task<Result<(Stream Stream, string ContentType)>> GetFileStreamAsync(Guid fileId)

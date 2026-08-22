@@ -29,8 +29,17 @@ namespace BookFlix.Core
                     sp.GetRequiredService<AuthService>(),
                     sp.GetRequiredService<ILogger<LoggingAuthService>>()));
 
-            services.AddScoped<IFileService<Book>, BookFileService>();
-            services.AddScoped<IFileService<User>, UserFileService>();
+            services.AddScoped<BookFileService>();
+            services.AddScoped<IFileService<Book>>(sp =>
+                new LoggingFileService<Book>(
+                    sp.GetRequiredService<ILogger<LoggingFileService<Book>>>(),
+                    sp.GetRequiredService<BookFileService>()));
+
+            services.AddScoped<UserFileService>();
+            services.AddScoped<IFileService<User>>(sp =>
+                new LoggingFileService<User>(
+                    sp.GetRequiredService<ILogger<LoggingFileService<User>>>(),
+                    sp.GetRequiredService<UserFileService>()));
             services.AddScoped<IUserLogService, UserLogService>();
             services.AddScoped<IJwtService, JwtService>();
 

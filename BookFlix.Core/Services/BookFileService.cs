@@ -3,7 +3,6 @@ using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
 using BookFlix.Core.Services.Validation;
-using Microsoft.Extensions.Logging;
 
 namespace BookFlix.Core.Services
 {
@@ -11,7 +10,7 @@ namespace BookFlix.Core.Services
     {
         public override string FolderName => "BookStorage";
 
-        public BookFileService(IFileStorageService fileStorageService, IBookRepository bookRepository, IUploadedFileRepository uploadedFileRepository, ILogger<BookFileService> logger) : base(fileStorageService, bookRepository, uploadedFileRepository, logger){}
+        public BookFileService(IFileStorageService fileStorageService, IBookRepository bookRepository, IUploadedFileRepository uploadedFileRepository) : base(fileStorageService, bookRepository, uploadedFileRepository){}
 
         public override Result ValidateFile(FileUploadModel file)
         {
