@@ -24,21 +24,19 @@ namespace BookFlix.Core.Services
         {
             if (string.IsNullOrWhiteSpace(email))
             {
-                return Result.Failure<(string, string)>(Error.Validation("EmailIsEmpty"));
+                return Result.Failure<(string, string)>(Error.Validation("InvalidCredentials"));
             }
 
             var user = await _userRepository.GetByEmailAsync(email);
+            bool isPasswordValid = user is not null && PasswordHelper.VerifyPassword(password, user.PasswordHash);
 
-            if (user is null)
+            if (user is null || !isPasswordValid)
             {
-                return Result.Failure<(string, string)>(Error.NotFound("UserNotFound"));
-            }
-
-            if (!PasswordHelper.VerifyPassword(password, user.PasswordHash))
-            {
-                await LogLoginAttempt(user.ID, false, ipAddress);
-
-                return Result.Failure<(string, string)>(Error.Validation("InvalidPassword"));
+                if (user is not null)
+                {
+                    await LogLoginAttempt(user.ID, false, ipAddress);
+                }
+                return Result.Failure<(string, string)>(Error.NotFound("InvalidCredentials"));
             }
 
             await LogLoginAttempt(user.ID, true, ipAddress);
