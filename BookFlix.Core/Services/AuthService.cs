@@ -1,4 +1,4 @@
-using BookFlix.Core.Helpers;
+﻿using BookFlix.Core.Helpers;
 using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;

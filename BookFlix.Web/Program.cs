@@ -1,4 +1,4 @@
-using BookFlix.Core;
+﻿using BookFlix.Core;
 using BookFlix.Infrastructure;
 using BookFlix.Web;
 using Microsoft.AspNetCore.Diagnostics;
@@ -15,15 +15,19 @@ app.UseExceptionHandler(appBuilder =>
 {
     appBuilder.Run(async context =>
     {
+        var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+
+        app.Logger.LogError(
+            exceptionHandlerFeature?.Error,
+            "Unhandled exception processing {Method} {Path} (TraceId: {TraceId})",
+            context.Request.Method,
+            context.Request.Path,
+            context.TraceIdentifier);
+
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
         context.Response.ContentType = "application/json";
 
-        var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
-        if (exceptionHandlerFeature != null)
-        {
-            var error = new { message = exceptionHandlerFeature.Error.Message };
-            await context.Response.WriteAsJsonAsync(error);
-        }
+        await context.Response.WriteAsJsonAsync(new { error = "ServerErrorMessage" });
     });
 });
 

@@ -1,8 +1,10 @@
 using BookFlix.Core.Service_Interfaces;
+using BookFlix.Web.Dtos;
 using BookFlix.Web.Extensions;
 using BookFlix.Web.Mapper_Interfaces;
 using BookFlix.Web.Mappers;
 using BookFlix.Web.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -32,7 +34,20 @@ namespace BookFlix.Web
             });
 
             services.AddAuthorization();
-            services.AddControllers();
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.InvalidModelStateResponseFactory = context =>
+                    {
+                        var message = context.ModelState.Values
+                            .SelectMany(state => state.Errors)
+                            .Select(error => error.ErrorMessage)
+                            .FirstOrDefault(msg => !string.IsNullOrWhiteSpace(msg));
+
+                        return new BadRequestObjectResult(
+                            new ApiErrorResponse(string.IsNullOrWhiteSpace(message) ? "ValidationError" : message));
+                    };
+                });
             SwaggerConfiguration(services);
 
             services.AddScoped<IBookMapper, BookMapper>();
@@ -157,7 +172,7 @@ namespace BookFlix.Web
                     context.HttpContext.Response.ContentType = "application/json";
                     await context.HttpContext.Response.WriteAsJsonAsync(new
                     {
-                        message = "Too many attempts. Please try again later."
+                        error = "Too many attempts. Please try again later."
                     }, cancellationToken);
                 };
 

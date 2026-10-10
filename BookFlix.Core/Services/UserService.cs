@@ -1,4 +1,4 @@
-using BookFlix.Core.Helpers;
+﻿using BookFlix.Core.Helpers;
 using BookFlix.Core.Models;
 using BookFlix.Core.Repositories;
 using BookFlix.Core.Service_Interfaces;
@@ -204,16 +204,6 @@ namespace BookFlix.Core.Services
 
         private async Task<Result> ValidateUsername(string username)
         {
-            if (string.IsNullOrWhiteSpace(username))
-            {
-                return Result.Failure(Error.Validation("UsernameIsEmpty"));
-            }
-
-            if (username.Length < 4)
-            {
-                return Result.Failure(Error.Validation("UsernameLengthTooShort"));
-            }
-
             if (await IsUsernameUsedBeforeAsync(username))
             {
                 return Result.Failure(Error.Conflict("UsernameUsed"));
@@ -224,11 +214,6 @@ namespace BookFlix.Core.Services
 
         private async Task<Result> ValidateEmail(string email)
         {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return Result.Failure(Error.Validation("EmailEmpty"));
-            }
-
             if (await IsEmailUsedBeforeAsync(email))
             {
                 return Result.Failure(Error.Conflict("EmailUsed"));

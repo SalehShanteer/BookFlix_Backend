@@ -24,7 +24,7 @@ namespace BookFlix.Web.Dtos.Book
 
         [Range(1, 10000, ErrorMessage = "PageCountLengthExceed")]
         public int PageCount { get; set; }
-
+        
         public bool IsAvailable { get; set; } = true;
 
         public List<Guid> AuthorIDs { get; set; }
